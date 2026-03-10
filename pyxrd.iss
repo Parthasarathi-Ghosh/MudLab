@@ -5,7 +5,7 @@
 ; Output: dist\PyXRD.clays-0.0.1-Setup.exe
 
 #define AppName      "PyXRD.clays"
-#define AppVersion   "0.0.1"
+#define AppVersion   "0.0.2"
 #define AppPublisher "PyXRD.clays Contributors"
 #define AppURL       "https://github.com/KazukiNoSuzaku/PyXRD"
 #define AppExeName   "pyxrd.exe"
