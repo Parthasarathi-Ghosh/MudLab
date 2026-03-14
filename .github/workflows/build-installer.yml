@@ -30,7 +30,7 @@ jobs:
       - name: Build portable ZIP
         shell: pwsh
         run: |
-          $version = (Get-Content data\lib\python3.8\site-packages\pyxrd\__version.py |
+          $version = (Get-Content data\lib\python3.14\site-packages\pyxrd\__version.py |
             Select-String '__version__').ToString() -replace '.*"(.*)".*','$1'
           $zipName = "PyXRD.clays-$version-Portable.zip"
           New-Item -ItemType Directory -Force -Path dist | Out-Null

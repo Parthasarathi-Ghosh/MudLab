@@ -1,14 +1,20 @@
 # GdkPixbuf Image Loader Modules file
 # Automatically generated file, do not edit
-# Created by gdk-pixbuf-query-loaders from gdk-pixbuf-2.40.0
+# Created by gdk-pixbuf-query-loaders from gdk-pixbuf-2.44.5
 #
-# LoaderDir = C:\msys64\home\Mathijs.dumon\pyxrd\win_installer\_build_root\mingw32\lib\gdk-pixbuf-2.0\2.10.0\loaders
+# LoaderDir = C:\msys64\mingw64\lib\gdk-pixbuf-2.0\2.10.0\loaders
 #
 "lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-ani.dll"
 "ani" 4 "gdk-pixbuf" "Windows animated cursor" "LGPL"
 "application/x-navi-animation" ""
 "ani" ""
 "RIFF    ACON" "    xxxx    " 100
+
+"lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-avif.dll"
+"avif" 5 "gdk-pixbuf" "AV1 Image File Format" "BSD"
+"image/avif" ""
+"avif" ""
+"    ftypavif" "zzz         " 100
 
 "lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-bmp.dll"
 "bmp" 5 "gdk-pixbuf" "BMP" "LGPL"
@@ -34,13 +40,6 @@
 "ico" "cur" ""
 "  \001   " "zz znz" 100
 "  \002   " "zz znz" 100
-
-"lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-jasper.dll"
-"jpeg2000" 4 "gdk-pixbuf" "JPEG 2000" "LGPL"
-"image/jp2" "image/jpeg2000" "image/jpx" ""
-"jp2" "jpc" "jpx" "j2k" "jpf" ""
-"    jP" "!!!!  " 100
-"\377O\377Q" "" 100
 
 "lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-jpeg.dll"
 "jpeg" 5 "gdk-pixbuf" "JPEG" "LGPL"
@@ -71,13 +70,6 @@
 "qtif" "qif" ""
 "abcdidsc" "xxxx    " 100
 "abcdidat" "xxxx    " 100
-
-"lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-svg.dll"
-"svg" 6 "gdk-pixbuf" "Scalable Vector Graphics" "LGPL"
-"image/svg+xml" "image/svg" "image/svg-xml" "image/vnd.adobe.svg+xml" "text/xml-svg" "image/svg+xml-compressed" ""
-"svg" "svgz" "svg.gz" ""
-" <svg" "*    " 100
-" <!DOCTYPE svg" "*             " 100
 
 "lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\libpixbufloader-tga.dll"
 "tga" 4 "gdk-pixbuf" "Targa" "LGPL"
@@ -110,4 +102,11 @@
 "image/x-xpixmap" ""
 "xpm" ""
 "/* XPM */" "" 100
+
+"lib\\gdk-pixbuf-2.0\\2.10.0\\loaders\\pixbufloader_svg.dll"
+"svg" 6 "gdk-pixbuf" "Scalable Vector Graphics" "LGPL"
+"image/svg+xml" "image/svg" "image/svg-xml" "image/vnd.adobe.svg+xml" "text/xml-svg" "image/svg+xml-compressed" ""
+"svg" "svgz" "svg.gz" ""
+" <svg" "*    " 100
+" <!DOCTYPE svg" "*             " 100
 
