@@ -4,12 +4,11 @@
 PyXRD is a Python application for X-ray diffraction analysis of disordered layered minerals.
 
 **Current active source path:** `data/lib/python3.14/site-packages/pyxrd/`
-(The old `data/lib/python3.8/` tree still exists but is no longer used — always edit the `python3.14` tree.)
 
 ## Repository
 - GitHub: KazukiNoSuzaku/PyXRD (fork: KazukiNoSuzaku/PyXRD.clays)
 - Main branch: `main`
-- Active working branch: `V7`
+- Active working branch: `V8`
 
 ## Architecture
 - **Bundled distribution:** The app ships its own Python runtime. Everything needed to run is inside `data/`.
@@ -43,8 +42,9 @@ pyxrd/
 ```
 
 ## Key Decisions
-- **Pyro4 server is disabled.** `pyxrd/data/settings.py` uses only `DummyAsyncServerProvider`.
-  Do not re-add `Pyro4AsyncServerProvider` unless explicitly asked.
+- **Pyro4 removed.** The Pyro4 package, serpent, msgpack, and ordered_set were deleted from
+  `site-packages` in V8 — they are not needed. `pyxrd/data/settings.py` uses only
+  `DummyAsyncServerProvider`. Do not re-add Pyro4 unless explicitly asked.
 - **importlib.resources** is used everywhere instead of `pkg_resources.resource_filename`.
   Pattern: `import importlib.resources as _ir; resource_filename = lambda pkg, path: str(_ir.files(pkg).joinpath(path))`
 
@@ -53,9 +53,16 @@ Always use `HHMMddmmyyyy` using the current system time (e.g. `011920022026` = 0
 
 ## Watch Out For
 - A linter may silently revert file edits. Always run `git diff` to confirm a change stuck before committing.
-- The `data/lib/.../` path contains both `.py` source files and `.pyc` compiled files — edit only the `.py` files.
-- `__pycache__` `.pyc` files show as modified in `git status` constantly — ignore them, do not stage or commit them.
+- The `data/lib/python3.14/` path contains both `.py` source files and `.pyc` compiled files — edit only the `.py` files.
+- `__pycache__` `.pyc` files show as untracked in `git status` constantly — ignore them, do not stage or commit them.
 - When testing, always relaunch `data\bin\pyxrd-cmd.exe` from scratch — Python bytecache means old code runs if the process isn't restarted.
+
+---
+
+## V8 Cleanup (2026-03-14)
+- `data/lib/python3.8/` deleted entirely (5,700+ files) — only python3.14 runtime remains
+- `Pyro4`, `serpent`, `msgpack`, `ordered_set` removed from `python3.14/site-packages`
+- `debug_matches.py` removed (leftover debug script)
 
 ---
 
@@ -126,7 +133,7 @@ All `from pkg_resources import resource_filename` calls replaced. Affected files
 
 ---
 
-## Current Status (as of 2026-03-14)
+## Current Status (as of 2026-03-14, V8 branch)
 - App launches cleanly, no warnings
 - Project files open successfully
 - Edit Phases dialog: works
@@ -134,3 +141,4 @@ All `from pkg_resources import resource_filename` calls replaced. Affected files
 - Find Peaks: works
 - Match Minerals / Auto Match: works (single and multiple peak selections)
 - Refinement (L-BFGS-B): works — completes without crash and shows results dialog
+- Codebase cleaned: python3.8 tree removed, Pyro4 and unused packages deleted
