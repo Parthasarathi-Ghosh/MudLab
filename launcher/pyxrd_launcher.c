@@ -14,6 +14,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     (void)hInstance; (void)hPrevInstance; (void)lpCmdLine; (void)nCmdShow;
 
     PyStatus status;
+
+    /* Enable UTF-8 mode (PEP 540) before streams are created.
+       utf8_mode lives in PyPreConfig, not PyConfig. */
+    PyPreConfig preconfig;
+    PyPreConfig_InitPythonConfig(&preconfig);
+    preconfig.utf8_mode = 1;
+    status = Py_PreInitialize(&preconfig);
+    if (PyStatus_Exception(status)) {
+        Py_ExitStatusException(status);
+    }
+
     PyConfig config;
     PyConfig_InitPythonConfig(&config);
 
