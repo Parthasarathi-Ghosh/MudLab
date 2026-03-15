@@ -34,7 +34,7 @@ jobs:
             Select-String '__version__').ToString() -replace '.*"(.*)".*','$1'
           $zipName = "PyXRD.clays-$version-Portable.zip"
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Compress-Archive -Path data, README.txt, PyXRD.clays.bat `
+          Compress-Archive -Path data, README.md, PyXRD.clays.bat `
             -DestinationPath "dist\$zipName"
           Write-Host "Created dist\$zipName"
           Get-ChildItem dist\
