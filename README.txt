@@ -1,29 +1,57 @@
-======
-PyXRD.clays
-======
+================================================================
+  PyXRD.clays
+  X-ray Diffraction Analysis for Disordered Layered Minerals
+================================================================
 
-PyXRD.clays is a refractored version of the original PyXRD package by Mathijs Dumon.
+PyXRD.clays is a Windows desktop application for modelling X-ray
+diffraction patterns of disordered clay minerals and other layered
+structures.
 
-The code has been revised for:
-1) Running it exclusively with Python 3.14 64-bit on Windows 10+ systems.
-2) Fixing bugs and compatibility issues.
-3) A few cosmetic changes.
+----------------------------------------------------------------
+  QUICK START — Install in 3 steps
+----------------------------------------------------------------
 
-Installation (recommended)
---------------------------
+  1. Go to the Releases page on GitHub:
+     https://github.com/KazukiNoSuzaku/PyXRD.clays/releases
 
-1) Download PyXRD-<version>-Setup.exe from the Releases page on GitHub:
-   https://github.com/KazukiNoSuzaku/PyXRD/releases
-2) Run the installer — no admin rights required.
-3) Launch PyXRD from the Start Menu (or Desktop if you opted in).
+  2. Download  PyXRD.clays-<version>-Setup.exe
 
-No extra software or Python installation needed.
+  3. Run the installer and follow the on-screen steps.
+     (No administrator rights required.)
 
+That's it. Launch PyXRD.clays from the Start Menu or Desktop.
 
-Portable version
-----------------
+No Python installation needed. Everything is bundled.
 
-If you prefer to run without installing:
+----------------------------------------------------------------
+  SYSTEM REQUIREMENTS
+----------------------------------------------------------------
 
-* 'data' contains the self-contained program.
-* Run data/bin/pyxrd.exe directly.
+  - Windows 10 or later (64-bit)
+  - ~300 MB free disk space
+  - No internet connection required after installation
+
+----------------------------------------------------------------
+  PORTABLE VERSION (no install)
+----------------------------------------------------------------
+
+Prefer to run without installing? Use the portable ZIP instead:
+
+  1. Download  PyXRD.clays-<version>-Portable.zip
+  2. Extract anywhere (e.g. a USB drive or a project folder)
+  3. Run  pyxrd_clays.exe  inside the extracted folder
+
+----------------------------------------------------------------
+  UNINSTALLING
+----------------------------------------------------------------
+
+Use  Settings > Apps  (or the classic Control Panel) and
+remove "PyXRD.clays" — same as any other Windows application.
+
+----------------------------------------------------------------
+  LICENCE
+----------------------------------------------------------------
+
+BSD 2-Clause. See Help > About inside the application.
+
+================================================================
