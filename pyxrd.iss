@@ -8,7 +8,7 @@
 #define AppVersion   "0.0.2"
 #define AppPublisher "PyXRD.clays Contributors"
 #define AppURL       "https://github.com/KazukiNoSuzaku/PyXRD"
-#define AppExeName   "pyxrd.exe"
+#define AppExeName   "pyxrd_clays.exe"
 #define AppIconFile     "data\lib\python3.14\site-packages\pyxrd\application\icons\pyxrd.ico"
 #define AppIconInstalled "lib\python3.14\site-packages\pyxrd\application\icons\pyxrd.ico"
 

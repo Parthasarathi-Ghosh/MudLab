@@ -14,7 +14,8 @@ PyXRD is a Python application for X-ray diffraction analysis of disordered layer
 - **Bundled distribution:** The app ships its own Python runtime. Everything needed to run is inside `data/`.
   - Binaries/DLLs: `data/bin/`
   - Python stdlib + site-packages: `data/lib/python3.14/`
-  - Launcher executable: `data/bin/pyxrd-cmd.exe` (calls `data/lib/python3.14/.../pyxrd/__main__.py`)
+  - Launcher executable: `data/bin/pyxrd_clays-cmd.exe` (calls `data/lib/python3.14/.../pyxrd/__main__.py`)
+  - GUI launcher: `data/bin/pyxrd_clays.exe` (no console window)
 - **MVC framework:** `data/lib/python3.14/site-packages/mvc/` — internal framework derived from pygtkmvc
 - **GTK3 UI:** Glade XML files in each module's `glade/` subfolder; loaded by `BaseView` subclasses
 - **Key packages:** numpy, scipy, matplotlib, GTK3 via PyGObject (all from MSYS2 MinGW64)
