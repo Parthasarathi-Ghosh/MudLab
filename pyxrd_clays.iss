@@ -1,13 +1,13 @@
 ; PyXRD.clays Inno Setup Installer Script
 ; Builds a self-contained Windows installer from the bundled data/ directory.
 ; Requirements: Inno Setup 6 (https://jrsoftware.org/isinfo.php)
-; Build:  iscc pyxrd.iss
-; Output: dist\PyXRD.clays-0.0.1-Setup.exe
+; Build:  iscc pyxrd_clays.iss
+; Output: dist\PyXRD.clays-0.0.4-Setup.exe
 
 #define AppName      "PyXRD.clays"
-#define AppVersion   "0.0.2"
+#define AppVersion   "0.0.4"
 #define AppPublisher "PyXRD.clays Contributors"
-#define AppURL       "https://github.com/KazukiNoSuzaku/PyXRD"
+#define AppURL       "https://github.com/KazukiNoSuzaku/PyXRD.clays"
 #define AppExeName   "pyxrd_clays.exe"
 #define AppIconFile     "data\lib\python3.14\site-packages\pyxrd\application\icons\pyxrd.ico"
 #define AppIconInstalled "lib\python3.14\site-packages\pyxrd\application\icons\pyxrd.ico"
