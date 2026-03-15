@@ -1,6 +1,13 @@
 ======
-PyXRD
+PyXRD.clays
 ======
+
+PyXRD.clays is a refractored version of the original PyXRD package by Mathijs Dumon.
+
+The code has been revised for:
+1) Running it exclusively with Python 3.14 64-bit on Windows 10+ systems.
+2) Fixing bugs and compatibility issues.
+3) A few cosmetic changes.
 
 Installation (recommended)
 --------------------------
@@ -18,15 +25,5 @@ Portable version
 
 If you prefer to run without installing:
 
-* 'data' contains the self-contained program (Python + GTK + PyXRD).
+* 'data' contains the self-contained program.
 * Run data/bin/pyxrd.exe directly.
-* 'config' (created on first run) stores all user configuration.
-
-
-How to update?
---------------
-
-Installer:  download and run the new installer — it will update in place.
-
-Portable:   1) Extract the new version to a new folder.
-            2) Copy your 'config' folder from the old version into the new one.
