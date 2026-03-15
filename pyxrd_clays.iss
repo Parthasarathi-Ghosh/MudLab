@@ -2,10 +2,10 @@
 ; Builds a self-contained Windows installer from the bundled data/ directory.
 ; Requirements: Inno Setup 6 (https://jrsoftware.org/isinfo.php)
 ; Build:  iscc pyxrd_clays.iss
-; Output: dist\PyXRD.clays-0.0.4-Setup.exe
+; Output: dist\PyXRD.clays-0.0.5-Setup.exe
 
 #define AppName      "PyXRD.clays"
-#define AppVersion   "0.0.4"
+#define AppVersion   "0.0.5"
 #define AppPublisher "PyXRD.clays Contributors"
 #define AppURL       "https://github.com/KazukiNoSuzaku/PyXRD.clays"
 #define AppExeName   "pyxrd_clays.exe"
