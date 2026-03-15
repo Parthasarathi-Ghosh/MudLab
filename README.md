@@ -158,6 +158,13 @@ BSD 2-Clause — see **Help > About** inside the application.
 
 ---
 
+## Acknowledgements
+
+PyXRD.clays is a substantially rewritten and extended fork of
+[PyXRD](https://github.com/mathijs-dumon/PyXRD) by Mathijs Dumon.
+
+---
+
 ## Links
 
 - [Releases](https://github.com/KazukiNoSuzaku/PyXRD.clays/releases)
