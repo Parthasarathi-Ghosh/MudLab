@@ -41,10 +41,10 @@ When a reference material is selected, the expected 2θ position of its stronges
 
 When a reference material is selected, two visual aids appear on the plot:
 
-- **Reference line** — a thin purple vertical line at the expected 2θ position of the reference peak. It is fixed; it does not move as the shift value changes. It disappears only when Manual is selected.
-- **Preview pattern** — a dashed ghost of the experimental pattern, shifted by the current **Value**. As the spinner is adjusted, the preview shifts live so the user can see how a peak aligns with the reference line before committing. The preview disappears after Apply (shift value resets to 0).
+- **Reference line** — a thin purple vertical line at the expected 2θ position of the reference peak. It is fixed; it does not move as the shift value changes.
+- **Preview pattern** — a dashed ghost of the experimental pattern, shifted by the current **Value**. As the spinner is adjusted, the preview shifts live so the user can see how a peak aligns with the reference line before committing.
 
-Neither visual aid appears in Manual mode.
+Both appear together when **Value** is non-zero and a reference material is selected. Both disappear after Apply (shift value resets to 0) and reappear as soon as the spinner is adjusted again. Neither appears in Manual mode.
 
 ---
 
