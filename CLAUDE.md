@@ -1,28 +1,28 @@
-# PyXRD – Claude Instructions
+# MudLab – Claude Instructions
 
 ## Project Overview
-PyXRD is a Python application for X-ray diffraction analysis of disordered layered minerals.
+MudLab is a Python application for X-ray diffraction analysis of disordered layered minerals.
 
-**Current active source path:** `data/lib/python3.14/site-packages/pyxrd/`
+**Current active source path:** `data/lib/python3.14/site-packages/mudlab/`
 
 ## Repository
-- GitHub: KazukiNoSuzaku/PyXRD (fork: KazukiNoSuzaku/PyXRD.clays)
+- GitHub: Parthasarathi-Ghosh/MudLab
 - Main branch: `main`
-- Active working branch: `V8`
+- Active working branch: `V12`
 
 ## Architecture
 - **Bundled distribution:** The app ships its own Python runtime. Everything needed to run is inside `data/`.
   - Binaries/DLLs: `data/bin/`
   - Python stdlib + site-packages: `data/lib/python3.14/`
-  - Launcher executable: `data/bin/pyxrd_clays-cmd.exe` (calls `data/lib/python3.14/.../pyxrd/__main__.py`)
-  - GUI launcher: `data/bin/pyxrd_clays.exe` (no console window)
+  - Launcher executable: `data/bin/mudlab-cmd.exe` (calls `data/lib/python3.14/.../mudlab/__main__.py`)
+  - GUI launcher: `data/bin/mudlab.exe` (no console window)
 - **MVC framework:** `data/lib/python3.14/site-packages/mvc/` — internal framework derived from pygtkmvc
 - **GTK3 UI:** Glade XML files in each module's `glade/` subfolder; loaded by `BaseView` subclasses
 - **Key packages:** numpy, scipy, matplotlib, GTK3 via PyGObject (all from MSYS2 MinGW64)
 
-## Key Module Layout (under `data/lib/python3.14/site-packages/pyxrd/`)
+## Key Module Layout (under `data/lib/python3.14/site-packages/mudlab/`)
 ```
-pyxrd/
+mudlab/
   calculations/       # Core math: peak_detection.py, math_tools.py, phases.py, specimen.py, mixture.py
   specimen/
     models/markers.py      # Marker, ThresholdSelector, MineralScorer models
@@ -44,10 +44,12 @@ pyxrd/
 
 ## Key Decisions
 - **Pyro4 removed.** The Pyro4 package, serpent, msgpack, and ordered_set were deleted from
-  `site-packages` in V8 — they are not needed. `pyxrd/data/settings.py` uses only
+  `site-packages` in V8 — they are not needed. `mudlab/data/settings.py` uses only
   `DummyAsyncServerProvider`. Do not re-add Pyro4 unless explicitly asked.
 - **importlib.resources** is used everywhere instead of `pkg_resources.resource_filename`.
   Pattern: `import importlib.resources as _ir; resource_filename = lambda pkg, path: str(_ir.files(pkg).joinpath(path))`
+- **MudLabLine shim:** `mudlab/generic/io/json_codec.py` remaps old `pyxrd.*` / `PyXRDLine` type
+  strings on load so project files saved before the rebrand still open correctly.
 
 ## Commit Message Format
 Always use `HHMMddmmyyyy` using the current system time (e.g. `011920022026` = 01:19 on Feb 20 2026).
@@ -56,7 +58,17 @@ Always use `HHMMddmmyyyy` using the current system time (e.g. `011920022026` = 0
 - A linter may silently revert file edits. Always run `git diff` to confirm a change stuck before committing.
 - The `data/lib/python3.14/` path contains both `.py` source files and `.pyc` compiled files — edit only the `.py` files.
 - `__pycache__` `.pyc` files show as untracked in `git status` constantly — ignore them, do not stage or commit them.
-- When testing, always relaunch `data\bin\pyxrd-cmd.exe` from scratch — Python bytecache means old code runs if the process isn't restarted.
+- When testing, always relaunch `data\bin\mudlab-cmd.exe` from scratch — Python bytecache means old code runs if the process isn't restarted.
+
+---
+
+## MudLab Rebrand (2026-03-29, V12 branch)
+- Full rename from PyXRD.clays → MudLab across all source, config, and docs
+- Package directory renamed: `site-packages/pyxrd/` → `site-packages/mudlab/`
+- All class names updated: `PyXRDLine→MudLabLine`, `PyXRDModel→MudLabModel`, etc.
+- File extension: `.pyxrd` → `.mud` (old files still load via shim)
+- Executables: `pyxrd.exe/pyxrd-cmd.exe` → `mudlab.exe/mudlab-cmd.exe`
+- Repository relocated: KazukiNoSuzaku/PyXRD.clays → Parthasarathi-Ghosh/MudLab
 
 ---
 
@@ -73,9 +85,9 @@ The bundled Python was upgraded from **3.8 → 3.14.3** (MSYS2 MinGW64). All fix
 
 ### Infrastructure
 - MSYS2 MinGW64 used for pre-built PyGObject/GTK3 + numpy/scipy/matplotlib
-- New launcher in `launcher/pyxrd_launcher.c` using `PyConfig` API (Python 3.12+)
+- New launcher in `launcher/mudlab_launcher.c` using `PyConfig` API (Python 3.12+)
 - `data/bin/` DLLs replaced with 64-bit MSYS2 versions
-- `pyxrd.iss` and `build-installer.yml` updated for python3.14 paths
+- `mudlab.iss` and `build-installer.yml` updated for python3.14 paths
 
 ### pkg_resources → importlib.resources (21 files)
 All `from pkg_resources import resource_filename` calls replaced. Affected files include:
@@ -118,23 +130,23 @@ All `from pkg_resources import resource_filename` calls replaced. Affected files
 ### Refinement fixes
 - `NavigationToolbar(self.canvas)` — removed deprecated `window` argument (refinement/views/refiner_view.py)
 - `MAXFUN = 500`, `MAXITER = 150`, `IPRINT = -1` — lowered from 15000; L-BFGS-B with nested `optimize_mixture()` is extremely expensive; IPRINT=-1 suppresses Fortran stdout writes that can crash on Windows (refinement/methods/scipy_runs.py)
-- Root crash fix: `GLib.MainContext.default().find_source_by_id()` is not thread-safe — was called from the refinement background thread via MVC signal chain (`apply_solution` → property setter → `visuals_changed` signal → `__notify_observer__` → `add_idle_call`). Fixed in `mvc/adapters/gtk_support/toolkit_functions.py`: call `GLib.idle_add()` (thread-safe) always, but only call `find_source_by_id()` from the main thread. Added `None` guard to `remove_source()`.
-- `except (IndexError, TypeError)` in `get_history_residual()` — fmin_l_bfgs_b returns a plain float residual; Python 3 raises `TypeError` (not `IndexError`) when indexing a float (refinement/refiner.py)
-- `faulthandler.enable()` added to `core.py` — prints C-level stack trace on native crashes
-- `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1` env vars set in `core.py` before numpy import
+- Root crash fix: `GLib.MainContext.default().find_source_by_id()` is not thread-safe — fixed in `mvc/adapters/gtk_support/toolkit_functions.py`
+- `except (IndexError, TypeError)` in `get_history_residual()` — fmin_l_bfgs_b returns a plain float residual (refinement/refiner.py)
+- `faulthandler.enable()` added to `core.py`
+- `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1` env vars set in `core.py`
 
 ### Unicode logging fix
-- `SafeStreamHandler` class in `logs.py` — encodes each log message through the stream's codec with `errors='replace'` before writing; `reconfigure()` does not work on Windows console streams
-- σ encoded to ASCII at source in `refiner.py` log message (`encode('ascii', errors='replace')`)
+- `SafeStreamHandler` class in `logs.py`
+- σ encoded to ASCII at source in `refiner.py`
 
 ### Other fixes
 - `imp.load_source` → `importlib.util` (mixture/models/insitu_mixture.py)
 - `inspect.getargspec` → `getfullargspec` (mvc/models/base.py, mvc/models/properties/labeled_property.py)
-- Windows GTK path setup block added to `core.py` (`os.add_dll_directory`, `GI_TYPELIB_PATH`, `GDK_PIXBUF` paths)
+- Windows GTK path setup block added to `core.py`
 
 ---
 
-## Current Status (as of 2026-03-14, V8 branch)
+## Current Status (as of 2026-03-29, V12 branch)
 - App launches cleanly, no warnings
 - Project files open successfully
 - Edit Phases dialog: works
@@ -142,4 +154,7 @@ All `from pkg_resources import resource_filename` calls replaced. Affected files
 - Find Peaks: works
 - Match Minerals / Auto Match: works (single and multiple peak selections)
 - Refinement (L-BFGS-B): works — completes without crash and shows results dialog
-- Codebase cleaned: python3.8 tree removed, Pyro4 and unused packages deleted
+- Parameter space plot popup: works, fully interactive
+- Shift Pattern dialog: non-modal, stays on top via set_keep_above
+- Mouse zoom/pan on main plot: Ctrl+scroll=zoom, Shift+scroll=pan, right-click=reset
+- Adaptive 2θ tick marks with minor subdivisions
