@@ -25,16 +25,16 @@ jobs:
       - name: Build installer
         shell: cmd
         run: |
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" pyxrd_clays.iss
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" mudlab.iss
 
       - name: Build portable ZIP
         shell: pwsh
         run: |
-          $version = (Get-Content data\lib\python3.14\site-packages\pyxrd\__version.py |
+          $version = (Get-Content data\lib\python3.14\site-packages\mudlab\__version.py |
             Select-String '__version__').ToString() -replace '.*"(.*)".*','$1'
-          $zipName = "PyXRD.clays-$version-Portable.zip"
+          $zipName = "MudLab-$version-Portable.zip"
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Compress-Archive -Path data, README.md, PyXRD.clays.bat `
+          Compress-Archive -Path data, README.md, MudLab.bat `
             -DestinationPath "dist\$zipName"
           Write-Host "Created dist\$zipName"
           Get-ChildItem dist\
@@ -42,14 +42,14 @@ jobs:
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PyXRD.clays-Windows-Installer
+          name: MudLab-Windows-Installer
           path: dist\*.exe
           if-no-files-found: error
 
       - name: Upload portable ZIP artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PyXRD.clays-Windows-Portable
+          name: MudLab-Windows-Portable
           path: dist\*.zip
           if-no-files-found: error
 

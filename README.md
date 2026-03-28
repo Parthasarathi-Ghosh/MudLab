@@ -1,8 +1,8 @@
-# PyXRD.clays
+# MudLab
 
 **X-ray Diffraction Analysis for Disordered Layered Minerals**
 
-PyXRD.clays is a Windows desktop application for modelling and fitting
+MudLab is a Windows desktop application for modelling and fitting
 X-ray diffraction (XRD) patterns of disordered clay minerals and other
 layered structures. It combines an interactive GTK3 graphical interface
 with a powerful numerical back-end (NumPy, SciPy, Matplotlib) to let you
@@ -15,20 +15,20 @@ parameters against measured data — all without writing a single line of code.
 
 ### Recommended — Installer
 
-1. Go to the [Releases page](https://github.com/KazukiNoSuzaku/PyXRD.clays/releases)
-2. Download `PyXRD.clays-<version>-Setup.exe`
+1. Go to the [Releases page](https://github.com/KazukiNoSuzaku/MudLab/releases)
+2. Download `MudLab-<version>-Setup.exe`
 3. Run the installer and follow the on-screen steps
 
 > No administrator rights required. No Python installation needed.
 > Everything is self-contained.
 
-Launch **PyXRD.clays** from the Start Menu or Desktop shortcut.
+Launch **MudLab** from the Start Menu or Desktop shortcut.
 
 ### Portable — No Install
 
-1. Download `PyXRD.clays-<version>-Portable.zip`
+1. Download `MudLab-<version>-Portable.zip`
 2. Extract anywhere (a USB drive, a project folder, etc.)
-3. Run `pyxrd_clays.exe` inside the extracted folder
+3. Run `mudlab.exe` inside the extracted folder
 
 ---
 
@@ -110,7 +110,7 @@ are all shown in a dedicated refinement dialog.
 
 | Format | Extension | Notes |
 |---|---|---|
-| PyXRD.clays project | `.pyxrd` | Native JSON-based format |
+| MudLab project | `.mud` | Native JSON-based format |
 | Bruker RAW | `.RAW` | v1, v2, v3 |
 | Bruker BRML | `.brml` | ZIP-based XML |
 | Sietronics CPI | `.cpi` | |
@@ -123,7 +123,7 @@ are all shown in a dedicated refinement dialog.
 ## Uninstalling
 
 Go to **Settings > Apps** (or the classic Control Panel) and remove
-**PyXRD.clays** — same as any other Windows application.
+**MudLab** — same as any other Windows application.
 
 The portable version leaves no traces: simply delete the extracted folder.
 
@@ -138,17 +138,17 @@ toolchain installed.
 ```bash
 # From the repo root inside an MSYS2 MinGW64 shell:
 bash launcher/build.sh
-cp launcher/pyxrd_clays.exe     data/bin/
-cp launcher/pyxrd_clays-cmd.exe data/bin/
+cp launcher/mudlab.exe     data/bin/
+cp launcher/mudlab-cmd.exe data/bin/
 ```
 
 To build the Windows installer, install [Inno Setup 6](https://jrsoftware.org/isinfo.php) and run:
 
 ```
-iscc pyxrd.iss
+iscc mudlab.iss
 ```
 
-Output: `dist/PyXRD.clays-<version>-Setup.exe`
+Output: `dist/MudLab-<version>-Setup.exe`
 
 ---
 
@@ -160,12 +160,12 @@ BSD 2-Clause — see **Help > About** inside the application.
 
 ## Acknowledgements
 
-PyXRD.clays is a substantially rewritten and extended fork of
+MudLab is a substantially rewritten and extended fork of
 [PyXRD](https://github.com/mathijs-dumon/PyXRD) by Mathijs Dumon.
 
 ---
 
 ## Links
 
-- [Releases](https://github.com/KazukiNoSuzaku/PyXRD.clays/releases)
-- [Issue tracker](https://github.com/KazukiNoSuzaku/PyXRD.clays/issues)
+- [Releases](https://github.com/KazukiNoSuzaku/MudLab/releases)
+- [Issue tracker](https://github.com/KazukiNoSuzaku/MudLab/issues)

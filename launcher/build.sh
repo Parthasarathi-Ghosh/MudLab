@@ -1,13 +1,13 @@
 #!/bin/bash
 export PATH=/mingw64/bin:$PATH
-cd /c/GitHub/PyXRD.clays/launcher
+cd /c/GitHub/MudLab/launcher
 
-gcc -mwindows -O2 -o pyxrd_clays.exe pyxrd_launcher.c \
+gcc -mwindows -O2 -o mudlab.exe mudlab_launcher.c \
     -I/mingw64/include/python3.14 \
     -L/mingw64/lib \
-    -lpython3.14 && echo "pyxrd_clays.exe built"
+    -lpython3.14 && echo "mudlab.exe built"
 
-gcc -mconsole -O2 -o pyxrd_clays-cmd.exe pyxrd_launcher.c \
+gcc -mconsole -O2 -o mudlab-cmd.exe mudlab_launcher.c \
     -I/mingw64/include/python3.14 \
     -L/mingw64/lib \
-    -lpython3.14 && echo "pyxrd_clays-cmd.exe built"
+    -lpython3.14 && echo "mudlab-cmd.exe built"
