@@ -97,7 +97,7 @@ If successful, refinement results will be displayed. Accepting the new values up
 Detailed explanations of MudLab's tools and outputs:
 
 - [How to interpret Parameter Space Plots](how-to/parameter-space-plots.md)
-- How to correct for Goniometer shift *(coming soon)*
+- [How to correct for Goniometer shift](how-to/goniometer-shift.md)
 - How to perform Baseline adjustment *(coming soon)*
 - How to use the Search-Match tool *(coming soon)*
 - How to set up a Refinement *(coming soon)*

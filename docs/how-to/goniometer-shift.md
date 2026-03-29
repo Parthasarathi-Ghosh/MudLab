@@ -1,4 +1,6 @@
-# Shift Pattern
+# How to Correct for Goniometer Shift
+
+[← Back to User Manual](../index.md)
 
 ## Overview
 
@@ -50,7 +52,7 @@ Both appear together when **Value** is non-zero and a reference material is sele
 
 ## Correction Method
 
-The currently active correction method is **Displacement** (set in `pyxrd/data/settings.py` via `PATTERN_SHIFT_TYPE`).
+The currently active correction method is **Displacement** (set in `mudlab/data/settings.py` via `PATTERN_SHIFT_TYPE`).
 
 ### Displacement correction (default)
 
@@ -72,7 +74,7 @@ Subtracts the shift value uniformly from all 2θ positions:
 data_x = data_x − shift_value
 ```
 
-All markers on the specimen are also shifted by the same amount. This mode is appropriate for a pure zero-point angular error. Switch by setting `PATTERN_SHIFT_TYPE = "Linear"` in `settings.py`.
+All markers on the specimen are also shifted by the same amount. This mode is appropriate for a pure zero-point angular error. Switch by setting `PATTERN_SHIFT_TYPE = "Linear"` in `mudlab/data/settings.py`.
 
 ---
 
@@ -128,11 +130,15 @@ In these cases, adjust **Value** manually with the spinbutton before clicking **
 
 | Component | File |
 |---|---|
-| Auto-detect + apply logic | `pyxrd/generic/models/lines/experimental_line.py` — `setup_shift_variables()`, `shift_data()` |
-| Controller | `pyxrd/generic/controllers/line_controllers.py` — `ShiftDataController` |
-| View | `pyxrd/generic/views/line_views.py` — `ShiftDataView` |
-| Dialog frame (buttons) | `pyxrd/generic/views/glade/lines/shift_dialog.glade` |
-| Content layout | `pyxrd/generic/views/glade/lines/shifting.glade` |
-| Reference line on plot | `pyxrd/generic/plot/plotters.py` |
-| Reference positions + shift type | `pyxrd/data/settings.py` — `PATTERN_SHIFT_POSITIONS`, `PATTERN_SHIFT_TYPE` |
-| Bragg conversion | `pyxrd/calculations/goniometer.py` — `get_2t_from_nm()`, `get_t_from_nm()` |
+| Auto-detect + apply logic | `mudlab/generic/models/lines/experimental_line.py` — `setup_shift_variables()`, `shift_data()` |
+| Controller | `mudlab/generic/controllers/line_controllers.py` — `ShiftDataController` |
+| View | `mudlab/generic/views/line_views.py` — `ShiftDataView` |
+| Dialog frame (buttons) | `mudlab/generic/views/glade/lines/shift_dialog.glade` |
+| Content layout | `mudlab/generic/views/glade/lines/shifting.glade` |
+| Reference line on plot | `mudlab/generic/plot/plotters.py` |
+| Reference positions + shift type | `mudlab/data/settings.py` — `PATTERN_SHIFT_POSITIONS`, `PATTERN_SHIFT_TYPE` |
+| Bragg conversion | `mudlab/calculations/goniometer.py` — `get_2t_from_nm()`, `get_t_from_nm()` |
+
+---
+
+[← Back to User Manual](../index.md)
