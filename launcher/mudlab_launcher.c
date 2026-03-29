@@ -1,62 +1,75 @@
 /*
- * MudLab launcher — Python 3.12+ (PyConfig API)
+ * MudLab launcher — thin wrapper around python.exe -m mudlab
  * Compile (MinGW64 from repo root):
  *   bash launcher/build.sh
+ *
+ * mudlab-cmd.exe: console build (-mconsole), spawns python.exe,
+ *                 inherits the terminal — output goes to the same console.
+ * mudlab.exe:     GUI build (-mwindows -DGUI_MODE), spawns pythonw.exe
+ *                 with CREATE_NO_WINDOW — no console window at all.
  */
 
-#include <Python.h>
 #include <windows.h>
-#include <stdlib.h>
+#include <wchar.h>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                   LPSTR lpCmdLine, int nCmdShow)
+int main(void)
 {
-    (void)hInstance; (void)hPrevInstance; (void)lpCmdLine; (void)nCmdShow;
+    /* Directory containing this exe (i.e. data\bin\) */
+    wchar_t exe_dir[MAX_PATH];
+    GetModuleFileNameW(NULL, exe_dir, MAX_PATH);
+    wchar_t *slash = wcsrchr(exe_dir, L'\\');
+    if (slash) *slash = L'\0';
 
-    PyStatus status;
+    wchar_t python[MAX_PATH];
+    _snwprintf(python, MAX_PATH, L"%s\\python.exe", exe_dir);
+#ifdef GUI_MODE
+    /* GUI launcher: suppress the console window */
+    DWORD create_flags = CREATE_NO_WINDOW;
+    BOOL inherit_handles = FALSE;
+#else
+    /* Console launcher: inherit terminal handles */
+    DWORD create_flags = 0;
+    BOOL inherit_handles = TRUE;
+#endif
 
-    /* Enable UTF-8 mode (PEP 540) before streams are created.
-       utf8_mode lives in PyPreConfig, not PyConfig. */
-    PyPreConfig preconfig;
-    PyPreConfig_InitPythonConfig(&preconfig);
-    preconfig.utf8_mode = 1;
-    status = Py_PreInitialize(&preconfig);
-    if (PyStatus_Exception(status)) {
-        Py_ExitStatusException(status);
+    /* Collect any extra args the user passed (everything after argv[0]) */
+    const wchar_t *cmdline = GetCommandLineW();
+    /* Skip past our own argv[0] (may be quoted) */
+    const wchar_t *extra = cmdline;
+    if (*extra == L'"') {
+        extra++;
+        while (*extra && *extra != L'"') extra++;
+        if (*extra == L'"') extra++;
+    } else {
+        while (*extra && *extra != L' ') extra++;
+    }
+    /* extra now points to " <user args>" or "" */
+
+    /* Build: "python[w].exe" -m mudlab [extra args] */
+    wchar_t cmd[32768];
+    _snwprintf(cmd, 32768, L"\"%s\" -m mudlab%s", python, extra);
+
+    STARTUPINFOW si;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&pi, sizeof(pi));
+
+    if (!CreateProcessW(python, cmd,
+                        NULL, NULL,
+                        inherit_handles,
+                        create_flags,
+                        NULL, NULL,
+                        &si, &pi)) {
+        MessageBoxW(NULL, L"Failed to launch python.exe.\nCheck that data\\bin\\python.exe exists.",
+                    L"MudLab", MB_ICONERROR | MB_OK);
+        return 1;
     }
 
-    PyConfig config;
-    PyConfig_InitPythonConfig(&config);
-
-    config.write_bytecode      = 0;
-    config.use_environment     = 0;
-    config.user_site_directory = 0;
-
-    /* Pass command-line args */
-    int argc;
-    LPWSTR *argv_w = CommandLineToArgvW(GetCommandLineW(), &argc);
-    status = PyConfig_SetArgv(&config, argc, argv_w);
-    LocalFree(argv_w);
-    if (PyStatus_Exception(status)) {
-        Py_ExitStatusException(status);
-    }
-
-    status = Py_InitializeFromConfig(&config);
-    PyConfig_Clear(&config);
-    if (PyStatus_Exception(status)) {
-        Py_ExitStatusException(status);
-    }
-
-    int ret = PyRun_SimpleString(
-        "import sys; from mudlab.core import run_main; sys.exit(run_main())"
-    );
-
-    Py_Finalize();
-    return ret;
-}
-
-int main(int argc, char *argv[])
-{
-    (void)argc; (void)argv;
-    return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOW);
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    DWORD exit_code = 0;
+    GetExitCodeProcess(pi.hProcess, &exit_code);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    return (int)exit_code;
 }
