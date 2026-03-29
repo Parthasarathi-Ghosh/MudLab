@@ -15,7 +15,7 @@ parameters against measured data — all without writing a single line of code.
 
 ### Recommended — Installer
 
-1. Go to the [Releases page](https://github.com/KazukiNoSuzaku/MudLab/releases)
+1. Go to the [Releases page](https://github.com/Parthasarathi-Ghosh/MudLab/releases)
 2. Download `MudLab-<version>-Setup.exe`
 3. Run the installer and follow the on-screen steps
 
@@ -154,7 +154,7 @@ Output: `dist/MudLab-<version>-Setup.exe`
 
 ## Licence
 
-BSD 2-Clause — see **Help > About** inside the application.
+BSD 3-Clause — see the [LICENSE](LICENSE) file or **Help > About** inside the application.
 
 ---
 
@@ -167,5 +167,5 @@ MudLab is a substantially rewritten and extended fork of
 
 ## Links
 
-- [Releases](https://github.com/KazukiNoSuzaku/MudLab/releases)
-- [Issue tracker](https://github.com/KazukiNoSuzaku/MudLab/issues)
+- [Releases](https://github.com/Parthasarathi-Ghosh/MudLab/releases)
+- [Issue tracker](https://github.com/Parthasarathi-Ghosh/MudLab/issues)
