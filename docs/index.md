@@ -96,6 +96,7 @@ If successful, refinement results will be displayed. Accepting the new values up
 
 Detailed explanations of MudLab's tools and outputs:
 
+- [How default phases are generated](how-to/default-phases.md)
 - [How to interpret Parameter Space Plots](how-to/parameter-space-plots.md)
 - [How to correct for Goniometer shift](how-to/goniometer-shift.md)
 - How to perform Baseline adjustment *(coming soon)*
