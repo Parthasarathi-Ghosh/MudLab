@@ -96,6 +96,7 @@ If successful, refinement results will be displayed. Accepting the new values up
 
 Detailed explanations of MudLab's tools and outputs:
 
+- [How MudLab calculates a diffraction pattern](how-to/diffraction-calculation.md)
 - [Phase and component file formats](how-to/file-formats.md)
 - [How default phases are generated](how-to/default-phases.md)
 - [How to interpret Parameter Space Plots](how-to/parameter-space-plots.md)
