@@ -8,7 +8,7 @@ MudLab is a Python application for X-ray diffraction analysis of disordered laye
 ## Repository
 - GitHub: Parthasarathi-Ghosh/MudLab
 - Main branch: `main`
-- Active working branch: `V12`
+- Active working branch: `V14`
 
 ## Architecture
 - **Bundled distribution:** The app ships its own Python runtime. Everything needed to run is inside `data/`.
