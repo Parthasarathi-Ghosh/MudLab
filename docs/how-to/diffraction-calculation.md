@@ -2,6 +2,8 @@
 
 [← Back to User Manual](../index.md)
 
+> **Printing to PDF:** Open this page in your browser and use **File → Print → Save as PDF**.
+
 This page describes the full mathematical pipeline that MudLab uses to compute a calculated XRD pattern from a set of phases and goniometer settings. It is intended for users who want to understand what the software is doing during refinement, how instrument parameters affect the result, or how to interpret the goodness-of-fit statistics.
 
 ---
@@ -83,6 +85,40 @@ where:
 - `d001` — basal spacing of this component (nm)
 - `δc` — c-axis distortion parameter (broadens individual peaks)
 - The `δc` term introduces a Gaussian-like broadening that grows quadratically in reciprocal space
+
+### How d001 is determined
+
+`d001` is the **basal spacing** of the component — the c-axis repeat distance of the clay layer including its interlayer space (nm). It is the most important structural parameter: it controls peak positions via Bragg's law and is what you adjust when fitting swelling or collapsing behaviour.
+
+Three companion c-axis parameters work together:
+
+| Parameter | UI label | Meaning | Default |
+|---|---|---|---|
+| `d001` | **Cell length c [nm]** | Current basal spacing (the value you set or refine) | 1.0 nm |
+| `default_c` | **Default length c [nm]** | Reference spacing at which interlayer atom z-positions were originally defined | same as `d001` at load time |
+| `delta_c` (δc) | **Δc spacing [nm]** | Layer-to-layer spacing disorder; broadens peaks | 0.0 nm |
+| `lattice_d` | *(not shown)* | Height of the silicate lattice alone (no interlayer); auto-computed as the maximum layer-atom z | — |
+
+**How `d001` is set:**
+
+1. **Directly by the user** — in Edit Phases, open a component and edit the **Cell length c [nm]** field. It is a combined slider and spin button with a range of 0–5 nm. The default on a new component is 1.0 nm (physically meaningless until set correctly).
+2. **Inherited from a linked component** — if the inherit checkbox next to **Cell length c** is ticked and the component is linked to another via `linked_with`, `d001` tracks the linked component's value. Used in mixed-layer phases to keep component spacings consistent across treatment variants.
+3. **Refined** — `d001` (Cell length c) is a refinable parameter and can be selected in the Refinement dialogue to be adjusted automatically against the observed pattern.
+
+**How interlayer atoms respond to a change in `d001`:**
+
+Interlayer atoms (water molecules, exchangeable cations) carry a `stretch_values = True` flag. Their z-position is not fixed — it is recomputed each time `d001` changes using a linear stretch between the silicate framework height (`lattice_d`) and the full basal spacing:
+
+```
+z_factor = (d001 − lattice_d) / (default_c − lattice_d)
+atom.z   = lattice_d + z_factor × (atom.default_z − lattice_d)
+```
+
+`default_c` is the denominator reference: it records the spacing at which the interlayer positions were originally defined in the file. Layer atoms (the silicate framework) keep fixed z-positions and are not stretched.
+
+**Consequence for the absolute scale:**
+
+The unit cell volume used in `abs_scale` is `cell_a × cell_b × d001`. Changing `d001` therefore also shifts the absolute intensity of the phase — a larger basal spacing gives a smaller `abs_scale` and lower peak heights, all else being equal.
 
 ---
 
@@ -357,6 +393,85 @@ Fractions are renormalised at each iteration so they sum to 1 (minus any fixed p
 ## Caching and Recalculation
 
 Phase intensities are cached with a key that includes every parameter that affects the pattern: atom positions, scattering factors, probability matrices, CSDS parameters, goniometer geometry, and the reciprocal-space grid. If any parameter changes (e.g. during full structure refinement), the cache is invalidated and the pattern is recalculated from scratch.
+
+---
+
+## Low-angle intensity — what controls the pattern below the first basal peak
+
+At the lowest 2θ, five factors multiply together to shape the calculated intensity. Several of them diverge or go to zero as θ → 0, and they largely oppose each other. The net shape at the low-angle end is therefore dominated by **goniometer geometry**, not by the crystal structure of the phases.
+
+### The 2θ grid — no intensity below `min_2theta`
+
+The calculation grid starts at:
+
+```
+θ_first = (min_2theta / 2) + δθ / 2        δθ = (max_2theta − min_2theta) / 2 / steps
+```
+
+The first point is offset inward by half a step from `min_2theta` (default 3°). No intensity is computed below this value. If the measured pattern starts lower than `min_2theta`, the goniometer setting must be adjusted accordingly.
+
+### Atomic scattering factors — largest at low angle
+
+The Cromer-Mann form factor peaks at `stl = 0` (2θ = 0) and decreases monotonically. At very low 2θ, `stl ≈ 0` and `f ≈ Z` (the atomic number), so the raw diffracted intensity from the crystallite is at its maximum. This pushes low-angle intensity **up**.
+
+### Lorentz-polarisation factor — diverges as 1/sin θ
+
+```
+LPF(θ) ∝ T(θ) / sin θ
+```
+
+Both `T(θ)` and the explicit `1/sin θ` term grow strongly as θ → 0, amplifying low-angle peaks significantly. This also pushes intensity **up**.
+
+### Machine corrections — the dominant suppressing force
+
+These corrections push low-angle intensity **down** and largely cancel the two factors above:
+
+**Fixed divergence slits:**
+
+```
+C_fix(θ) = min( sin θ × L_sample / (R × tan φ),  1 )
+```
+
+At low angles `sin θ` is small, so only a fraction of the beam falls on the sample. This is the strongest low-angle suppression factor.
+
+**Automatic divergence slits (ADS):**
+
+```
+C_ADS(θ) = sin θ
+```
+
+The `sin θ` factor converts the ADS-measured pattern to the fixed-slit equivalent. Same suppressing effect at low angles.
+
+**Absorption correction:**
+
+```
+C_abs(θ) = 1 − exp(−2μ* / sin θ)
+```
+
+For thick or absorbing samples, this removes additional low-angle intensity.
+
+### The first basal peak — lowest structural feature
+
+The `d001` term in the phase difference factor places constructive interference at:
+
+```
+2θ_n = 2 arcsin( n λ / 2 d001 )        (Bragg's law, n = 1, 2, 3, …)
+```
+
+The n = 1 peak is the **lowest 2θ feature of crystallographic origin**. For common clay minerals with Cu Kα₁ (λ = 0.154056 nm):
+
+| Mineral / state | d001 (nm) | 001 peak (2θ) |
+|---|---|---|
+| Kaolinite | 0.72 | ~12.3° |
+| Illite | 1.00 | ~8.8° |
+| Smectite, air-dried | 1.25–1.55 | ~5.7–7.1° |
+| Smectite, glycolated | 1.70 | ~5.2° |
+
+Below the first basal peak, the calculated intensity is flat background (`Δbg`) shaped only by the machine correction geometry.
+
+### Net result
+
+The low-angle tail below the first 001 peak is controlled almost entirely by the goniometer settings (slit mode, divergence angle, sample length, radius, absorption), not by the phase crystal structure. Getting this region right requires correct goniometer parameters, not phase parameter adjustments.
 
 ---
 

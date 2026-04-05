@@ -97,10 +97,20 @@ If successful, refinement results will be displayed. Accepting the new values up
 Detailed explanations of MudLab's tools and outputs:
 
 - [How MudLab calculates a diffraction pattern](how-to/diffraction-calculation.md)
+- [Project file format (.mud)](how-to/project-file-format.md)
 - [Phase and component file formats](how-to/file-formats.md)
+- [How to use Edit Phases](how-to/edit-phases.md)
+- [How to change an interlayer cation](how-to/change-interlayer-cation.md)
 - [How default phases are generated](how-to/default-phases.md)
 - [How to interpret Parameter Space Plots](how-to/parameter-space-plots.md)
 - [How to correct for Goniometer shift](how-to/goniometer-shift.md)
+- [Exclusion ranges](how-to/exclusion-ranges.md)
+- [How to use Markers (peak detection and mineral identification)](how-to/markers.md)
 - How to perform Baseline adjustment *(coming soon)*
 - How to use the Search-Match tool *(coming soon)*
 - How to set up a Refinement *(coming soon)*
+
+## Troubleshooting
+
+- [How the scale per specimen is determined](how-to/troubleshooting.md#how-the-scale-per-specimen-is-determined)
+- [Optimiser sets the scale to a very small value](how-to/troubleshooting.md#optimiser-sets-the-scale-to-a-very-small-value)

@@ -2,10 +2,10 @@
 ; Builds a self-contained Windows installer from the bundled data/ directory.
 ; Requirements: Inno Setup 6 (https://jrsoftware.org/isinfo.php)
 ; Build:  iscc mudlab.iss
-; Output: dist\MudLab-0.1.0-Setup.exe
+; Output: dist\MudLab-0.1.1-Setup.exe
 
 #define AppName      "MudLab"
-#define AppVersion   "0.1.0"
+#define AppVersion   "0.1.1"
 #define AppPublisher "MudLab Contributors"
 #define AppURL       "https://github.com/Parthasarathi-Ghosh/MudLab"
 #define AppExeName   "mudlab.exe"
