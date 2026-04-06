@@ -48,7 +48,7 @@ Launch **MudLab** from the Start Menu or Desktop shortcut.
 ### Project & Specimen Management
 - Organise your work into **projects** containing one or more specimens
 - Import measured XRD patterns from a wide range of formats:
-  `.RAW` (Bruker), `.BRML`, `.CPI`, `.RD`, `.UDF`, `.CSV`
+  `.XRDML` (PANalytical), `.RAW` (Bruker), `.BRML`, `.CPI`, `.RD`, `.UDF`, `.CSV`
 - Visualise experimental and calculated patterns side by side on an
   interactive Matplotlib plot
 
