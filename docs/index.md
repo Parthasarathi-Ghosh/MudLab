@@ -102,6 +102,7 @@ Detailed explanations of MudLab's tools and outputs:
 - [How to use Edit Phases](how-to/edit-phases.md)
 - [How to change an interlayer cation](how-to/change-interlayer-cation.md)
 - [How default phases are generated](how-to/default-phases.md)
+- [Anatomy of the MudLab Plot](how-to/plot-anatomy.md)
 - [How to interpret Parameter Space Plots](how-to/parameter-space-plots.md)
 - [How to correct for Goniometer shift](how-to/goniometer-shift.md)
 - [Exclusion ranges](how-to/exclusion-ranges.md)
