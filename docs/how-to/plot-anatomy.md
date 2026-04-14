@@ -144,6 +144,13 @@ The crosshair is a dashed vertical line that follows the mouse pointer across th
 When the crosshair is enabled:
 - A thin dashed vertical line (`#555555`) tracks the cursor's x-position across the plot.
 - **Left-click and drag** highlights a region of all visible patterns between the start and end x-positions with an orange overlay (`#FF6600`, 45% opacity). Releasing the mouse button clears the highlight. This is useful for visually isolating a 2-theta range of interest.
+- While the drag is in progress, the status bar switches from the point readout to a **range readout** showing the absolute width of the highlighted interval:
+
+  ```
+  Δ 2θ= 2.50 °    Δ d= 0.08 nm
+  ```
+
+  In multi-specimen mode, the Δd value is followed by an asterisk (`Δ d= 0.08* nm`), same convention as the point readout — the Δd is computed from the first specimen in the selection order. The range display turns on as soon as the drag starts and reverts to the normal point readout the moment the mouse button is released.
 
 ---
 

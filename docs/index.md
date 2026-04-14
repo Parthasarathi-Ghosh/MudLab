@@ -109,7 +109,7 @@ Detailed explanations of MudLab's tools and outputs:
 - [How to use Markers (peak detection and mineral identification)](how-to/markers.md)
 - How to perform Baseline adjustment *(coming soon)*
 - How to use the Search-Match tool *(coming soon)*
-- How to set up a Refinement *(coming soon)*
+- [How to do a Refinement](how-to/refinement.md)
 
 ## Troubleshooting
 
