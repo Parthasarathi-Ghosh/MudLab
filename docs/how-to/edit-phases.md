@@ -44,10 +44,38 @@ A **phase** represents one crystallographic layer type or one mixed-layered sequ
 
 #### Based on phase
 
-A drop-down that links this phase to another phase of the **same G and R** in the project. Used for treatment variants: you create a primary phase (AD), then create secondary phases (EG, 350) that inherit CSDS, σ*, colour, and/or atom positions from the AD phase, changing only d001 and interlayer atoms.
+**Scientific context — interstratified (mixed-layer) clay minerals**
 
-- The dropdown only shows phases with the same G and R and that are not already downstream of this one (no circular references).
-- Setting "Based on phase" enables the three **Inherit** checkboxes.
+Many natural clays are not pure mineral phases but **interstratified sequences** of two or more distinct layer types stacked along the c-axis. A chlorite-smectite, for example, alternates chlorite layers (d001 ≈ 1.42 nm) and smectite layers (d001 ≈ 1.5 nm) within the same crystallite. Each layer type is modelled as a separate phase in MudLab, but because they are part of the same crystal they share certain properties:
+
+- The **CSDS distribution** (crystallite size) is a property of the whole crystallite, not of individual layer types.
+- **σ*** (turbostratic disorder) reflects how well the crystallite as a whole is oriented, not how each layer type is oriented individually.
+
+**Usage — treatment variants**
+
+The most common use is modelling the same mineral under different preparation treatments (air-dried AD, ethylene-glycol EG, heated 350 °C). The silicate layer structure and lateral cell dimensions do not change between treatments; only d001 and the interlayer content change. You therefore create:
+
+1. A **primary phase** (AD) — fully specified with all structural data.
+2. **Secondary phases** (EG, 350) — set "Based on phase" to the AD phase. Each secondary phase then inherits CSDS, σ*, and colour from AD and only needs its own d001 and interlayer atoms.
+
+**Rules**
+
+- The dropdown only shows phases with the **same G and R** as the current phase.
+- Circular references are blocked (a phase cannot be based on itself or on a phase that is based on it).
+- Setting "Based on phase" enables the three **Inherit** checkboxes (CSDS, σ*, colour).
+- Clearing "Based on phase" automatically clears all component **Linked with** links in this phase.
+
+**What happens when the dropdown changes**
+
+Selecting a phase in the dropdown triggers the following chain:
+
+1. The selection is validated — same G/R, no circular reference, same project. If invalid the combo resets to blank.
+2. `phase.based_on` is set to the chosen phase. The setter checks whether the value actually changed; if so, it **clears every component's "Linked with"** unconditionally (even when switching from one valid phase to another). This prevents stale links to the wrong phase's components.
+3. Each `component.linked_with = None` resets all of that component's inherit flags to False and stops the component observing its former linked partner.
+4. The "Linked with" dropdown in each component editor is repopulated with the new based-on phase's components and re-enabled.
+5. `update_sensitivities()` runs: inherit checkboxes for σ*, colour, and CSDS are enabled; field widgets that were hidden by an active inherit are restored.
+
+Clearing the dropdown (setting to blank) follows the same chain but leaves "Linked with" dropdowns empty and disabled, since there is no source phase to link to.
 
 #### Nr. of components (read-only)
 
@@ -163,10 +191,87 @@ Free-text label for this layer type. Used in the component list and in exported 
 
 ### Linked with
 
-A drop-down that links this component to a component of the **same position** in the "Based on phase". When linked, any field with its corresponding **Inherit** checkbox ticked will take its value from the linked component at runtime instead of from its own stored value.
+A drop-down that links this component to a component in the "Based on phase". When linked, any field with its corresponding **Inherit** checkbox ticked will take its value from the linked component at runtime instead of from its own stored value.
 
-- The dropdown is only populated when the phase has a "Based on phase" set.
-- Linking is used for treatment variants: the EG and 350 components link to the AD component so they share the silicate layer structure (atoms, cell dimensions) but have different d001 and interlayer atoms.
+- The dropdown is only populated when the parent phase has a "Based on phase" set.
+- Clearing "Linked with" resets all inherit flags to off.
+
+**Purpose**
+
+While "Based on phase" shares phase-wide properties (CSDS, σ*), "Linked with" shares **component-level structural data**. For treatment variants, the EG and 350 components link to the AD component and inherit:
+
+- The **silicate layer atoms** (Si, Al, Fe, O) — these do not change with treatment.
+- The **unit cell dimensions a and b** (and their Fe/Al formulae) — same lateral structure.
+- The **atom relations** — the same Fe/Al substitution constraints apply.
+
+The secondary component then sets its own **d001** and **interlayer atoms** (different water layers or ethylene glycol), which is the only thing that changes between treatments.
+
+**What can be inherited per component**
+
+| Inherit checkbox | What is shared |
+|---|---|
+| Inherit cell length a | ucp_a — value and formula |
+| Inherit cell length b | ucp_b — value and formula |
+| Inherit cell length c | d001 basal spacing |
+| Inherit default length c | default_c reference spacing |
+| Inherit Δc spacing | delta_c stacking disorder |
+| Inherit layer atoms | Full layer atom list |
+| Inherit interlayer atoms | Full interlayer atom list |
+| Inherit atom relations | Full atom relations list |
+
+Inherit checkboxes can be combined freely. A typical setup inherits layer atoms, a, b, and atom relations but does **not** inherit d001 or interlayer atoms.
+
+---
+
+## Step-by-step: modelling treatment variants or interstratified clays
+
+This workflow covers the most common use of "Based on phase" and "Linked with": creating AD / EG / 350 °C variants of the same phase, or modelling a mixed-layer mineral such as illite-smectite.
+
+### 1. Create the primary phase
+
+Add a new phase (click **+** in the phase list). Choose the correct **G** (number of layer types) and **R** (stacking order). Give it a descriptive name such as "Illite AD".
+
+Fully specify all structural data in this phase:
+- CSDS distribution and σ*
+- Each component's d001, default_c, layer atoms, interlayer atoms, a/b cell dimensions, atom relations
+
+This phase is the structural reference. Set it up completely before creating any variants.
+
+### 2. Create secondary phases
+
+Add one new phase per treatment or variant (EG, 350, etc.). Use the **same G and R** as the primary phase.
+
+For each secondary phase:
+1. Set **"Based on phase"** to the primary phase.
+2. Tick **Inherit CSDS** and **Inherit σ*** if the crystallite size and orientation disorder are the same across treatments (almost always true).
+3. Optionally tick **Inherit colour** if you want consistent plot colours.
+
+### 3. Link components
+
+In the **Components** tab of each secondary phase, click each component and set **"Linked with"** to the corresponding component of the primary phase.
+
+Then tick the inherit checkboxes for the properties that do **not** change between treatments:
+
+| Typically inherited | Typically NOT inherited |
+|---|---|
+| Layer atoms | d001 (basal spacing changes) |
+| Cell lengths a and b | Interlayer atoms (water/glycol changes) |
+| Atom relations | default_c (set it to match the new d001) |
+| Δc spacing | |
+
+### 4. Set d001 and interlayer atoms for each secondary component
+
+With linkage in place, only fill in what differs:
+
+- Change **d001** to the appropriate value for this treatment (e.g. 1.686 nm for EG smectite).
+- Set **default_c** equal to the new d001.
+- Replace the **interlayer atoms** with the correct species and positions for this state (e.g. 2 planes of ethylene glycol at z = 0.3 and z = 0.7 × d001).
+
+All other structural data flows automatically from the primary phase through the inherit links.
+
+### 5. Assign to specimens
+
+In **Edit Mixtures**, assign the correct phase set to each specimen treatment. The AD mixture uses the primary phase; EG and 350 mixtures use their respective secondary phases.
 
 ---
 
