@@ -65,6 +65,18 @@ The most common use is modelling the same mineral under different preparation tr
 - Setting "Based on phase" enables the three **Inherit** checkboxes (CSDS, σ*, colour).
 - Clearing "Based on phase" automatically clears all component **Linked with** links in this phase.
 
+**What happens when the dropdown changes**
+
+Selecting a phase in the dropdown triggers the following chain:
+
+1. The selection is validated — same G/R, no circular reference, same project. If invalid the combo resets to blank.
+2. `phase.based_on` is set to the chosen phase. The setter checks whether the value actually changed; if so, it **clears every component's "Linked with"** unconditionally (even when switching from one valid phase to another). This prevents stale links to the wrong phase's components.
+3. Each `component.linked_with = None` resets all of that component's inherit flags to False and stops the component observing its former linked partner.
+4. The "Linked with" dropdown in each component editor is repopulated with the new based-on phase's components and re-enabled.
+5. `update_sensitivities()` runs: inherit checkboxes for σ*, colour, and CSDS are enabled; field widgets that were hidden by an active inherit are restored.
+
+Clearing the dropdown (setting to blank) follows the same chain but leaves "Linked with" dropdowns empty and disabled, since there is no source phase to link to.
+
 #### Nr. of components (read-only)
 
 Shows the current value of **G** (the number of distinct layer types in this phase). It equals the number of entries in the Components list. To change G you must add or remove components — there is no direct G field to type into.
