@@ -451,12 +451,14 @@ Use them when you need to keep total occupancy on a site fixed while changing th
 
 ### Managing relations
 
+The Atom relations toolbar contains a **type selector combo** (showing `"Ratio"` or `"Contents"`) and a **+** button. The combo controls what type **+** creates.
+
 | Action | How |
 |---|---|
-| Add an AtomRatio | Click **+** in the Atom relations list |
-| Add an AtomContents | Click the type selector dropdown first, then **+** |
+| Add an AtomRatio | Select **"Ratio"** in the type combo (default), then click **+** |
+| Add an AtomContents | Select **"Contents"** in the type combo, then click **+** |
 | Delete a relation | Select a relation and click **−** |
-| Edit a relation | Select it — its editor opens in the right panel of the Atom relations section |
+| Edit a relation | Click the **pencil (✏)** icon on the relation's row to open its editor |
 
 Two relation types are available:
 
@@ -479,7 +481,12 @@ Two relation types are available:
 
 When you change **Ratio**, both `pn` values are updated immediately and the calculated pattern updates. Ratio is refinable.
 
-The dropdown lists for **Substituting atom** and **Original atom** include all layer and interlayer atoms of this component, plus the `SUM` and `RATIO` properties of any other `AtomRatio` relations — allowing chained substitutions (e.g. Al → Fe + Mg, with a second ratio controlling Fe/Mg).
+The dropdown lists for **Substituting atom** and **Original atom** include:
+- All layer and interlayer atoms of this component (sets `pn`)
+- The **SUM** and **RATIO** properties of any other `AtomRatio` relations in this component
+- The **Value** of any `AtomContents` relations in this component
+
+Pointing atom1 or atom2 at another relation's SUM or RATIO enables **chained substitutions**. Example: Al → Fe + Mg modelled as two linked AtomRatio relations — the first controls total substitution (Fe+Mg vs Al), the second splits the substituting pool between Fe and Mg.
 
 ---
 
@@ -493,10 +500,12 @@ The dropdown lists for **Substituting atom** and **Original atom** include all l
 |---|---|---|---|
 | **Name** | Label for this relation | — | Free text (e.g. "K Content") |
 | **Enabled** (checkbox) | Suspend the relation | — | |
-| **Value** (entry) | The controlling value; each atom's pn = Value × its amount | varies | Refinable |
+| **Value** (entry) | The controlling value; each atom's pn = Value × its amount. No enforced bounds — keep ≥ 0 for physically meaningful occupancies. | varies | Refinable |
 | **Atom contents list** | Table of (atom, amount) pairs that this relation drives | — | Add rows with **+**; each row has an atom dropdown and an amount entry |
 
-Each row in the atom contents list sets `atom.pn = Value × amount`. Using amount = 1 means the atom's pn directly equals Value.
+**`amount`** is a fixed, user-defined multiplier per atom. Range: **[0, ∞)**, default 0.0. It is not derived automatically — type it in when adding or editing a row. Using `amount = 1.0` means the atom's `pn` tracks `Value` directly; `amount = 0.5` means it tracks half of `Value`.
+
+Each row in the atom contents list sets `atom.pn = Value × amount`. The atom dropdown in each row lists the same targets as AtomRatio (all layer/interlayer atoms, plus any AtomRatio's SUM or RATIO), allowing AtomContents to drive another relation's sum or ratio instead of a plain atom occupancy.
 
 ---
 
