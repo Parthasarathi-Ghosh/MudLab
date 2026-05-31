@@ -77,6 +77,7 @@ The calculated pattern plot updates dynamically, and phase proportions and resid
 
 ### Step 8 — View composition
 Click the **Composition** button to display the major oxide composition of the mixture computed from the phase parameters.
+See [How oxide composition is computed](how-to/composition.md) for a full explanation.
 
 ### Step 9 — Refine phase parameters
 Click **Refine** to open the refinement dialogue. Select up to two parameters from the list and click **Refine** to run the process.
@@ -110,6 +111,8 @@ Detailed explanations of MudLab's tools and outputs:
 - How to perform Baseline adjustment *(coming soon)*
 - How to use the Search-Match tool *(coming soon)*
 - [How to do a Refinement](how-to/refinement.md)
+- [How oxide composition is computed](how-to/composition.md)
+- [Simulating isomorphous substitutions using Atom Relations](how-to/atom-relations-substitutions.md)
 
 ## Troubleshooting
 
