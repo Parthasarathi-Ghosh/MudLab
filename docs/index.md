@@ -113,6 +113,7 @@ Detailed explanations of MudLab's tools and outputs:
 - [How to do a Refinement](how-to/refinement.md)
 - [How oxide composition is computed](how-to/composition.md)
 - [Simulating isomorphous substitutions using Atom Relations](how-to/atom-relations-substitutions.md)
+- [Default component structures — cross-section diagrams](how-to/default-component-structures.md)
 
 ## Troubleshooting
 
