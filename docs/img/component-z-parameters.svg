@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="560" viewBox="0 0 680 560" font-family="Arial, sans-serif" font-size="12">
+
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#333"/>
+    </marker>
+    <marker id="arr-up" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0,0 3,8 6" fill="#333"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#1a5276"/>
+    </marker>
+    <marker id="arr-blue-up" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0,0 3,8 6" fill="#1a5276"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#b7600a"/>
+    </marker>
+    <marker id="arr-orange-up" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0,0 3,8 6" fill="#b7600a"/>
+    </marker>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#aaaaaa" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+
+  <!-- ===== BACKGROUND ===== -->
+  <rect width="680" height="560" fill="white"/>
+
+  <!-- ===== TITLE ===== -->
+  <text x="340" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">MudLab Component — z-coordinate and spacing parameters</text>
+
+  <!-- =====================================================================
+       GEOMETRY  (d001 = 1.50 nm = 380 px,  scale = 253 px/nm)
+       y = 490 → z = 0   (bottom of unit cell)
+       y = 248 → z = 0.96 nm = lattice_d
+       y =  90 → z = 1.50 nm = d001 = default_c
+       ===================================================================== -->
+
+  <!-- ── ghost of adjacent layer ABOVE (hatched) ── -->
+  <rect x="140" y="55" width="300" height="35" fill="url(#hatch)" stroke="#aaa" stroke-width="1"/>
+  <text x="290" y="78" text-anchor="middle" font-size="11" fill="#888" font-style="italic">next T-O-T layer (bottom oxygens)</text>
+
+  <!-- ── INTERLAYER (orange tint) ── -->
+  <rect x="140" y="90" width="300" height="158" fill="#fff3e0" stroke="#e0952a" stroke-width="1.5"/>
+
+  <!-- interlayer label -->
+  <text x="290" y="122" text-anchor="middle" font-size="12" font-weight="bold" fill="#7d5a00">Interlayer</text>
+  <text x="290" y="138" text-anchor="middle" font-size="11" fill="#7d5a00">(exchangeable cations, H₂O, glycol)</text>
+  <text x="290" y="153" text-anchor="middle" font-size="11" fill="#7d5a00">atoms have  stretch_z = True</text>
+
+  <!-- ── T-O-T layer (blue tint) ── -->
+  <rect x="140" y="248" width="300" height="242" fill="#e8f4fb" stroke="#2e86c1" stroke-width="1.5"/>
+
+  <!-- T-O-T layer label -->
+  <text x="290" y="372" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a5276">T-O-T (or T-O) layer</text>
+  <text x="290" y="388" text-anchor="middle" font-size="11" fill="#1a5276">rigid framework — atoms have stretch_z = False</text>
+  <text x="290" y="404" text-anchor="middle" font-size="11" fill="#1a5276">Def. Z = Calc. Z always</text>
+
+  <!-- ── ghost of adjacent layer BELOW (hatched) ── -->
+  <rect x="140" y="490" width="300" height="35" fill="url(#hatch)" stroke="#aaa" stroke-width="1"/>
+  <text x="290" y="513" text-anchor="middle" font-size="11" fill="#888" font-style="italic">previous T-O-T layer (top oxygens)</text>
+
+  <!-- ── horizontal atom layers inside T-O-T (schematic) ── -->
+  <line x1="145" y1="480" x2="435" y2="480" stroke="#2e86c1" stroke-width="1.2" stroke-dasharray="5,3"/>  <!-- z=0: bottom O -->
+  <line x1="145" y1="461" x2="435" y2="461" stroke="#2e86c1" stroke-width="1"   stroke-dasharray="5,3"/>  <!-- lower Si -->
+  <line x1="145" y1="435" x2="435" y2="435" stroke="#2e86c1" stroke-width="1"   stroke-dasharray="5,3"/>  <!-- apical O -->
+  <line x1="145" y1="369" x2="435" y2="369" stroke="#2e86c1" stroke-width="1.5" stroke-dasharray="5,3"/>  <!-- octahedral (centre) -->
+  <line x1="145" y1="303" x2="435" y2="303" stroke="#2e86c1" stroke-width="1"   stroke-dasharray="5,3"/>  <!-- apical O -->
+  <line x1="145" y1="276" x2="435" y2="276" stroke="#2e86c1" stroke-width="1"   stroke-dasharray="5,3"/>  <!-- upper Si -->
+  <line x1="145" y1="252" x2="435" y2="252" stroke="#2e86c1" stroke-width="1.2" stroke-dasharray="5,3"/>  <!-- top O = lattice_d -->
+
+  <!-- Atom labels inside T-O-T (right side) -->
+  <text x="442" y="484" font-size="10" fill="#1a5276">basal O (z = 0)</text>
+  <text x="442" y="465" font-size="10" fill="#1a5276">Si (tet)</text>
+  <text x="442" y="439" font-size="10" fill="#1a5276">apical O, OH</text>
+  <text x="442" y="373" font-size="10" fill="#1a5276">Al / Mg (oct)</text>
+  <text x="442" y="307" font-size="10" fill="#1a5276">apical O, OH</text>
+  <text x="442" y="280" font-size="10" fill="#1a5276">Si (tet)</text>
+  <text x="442" y="256" font-size="10" fill="#1a5276">basal O → lattice_d</text>
+
+  <!-- ── Interlayer atoms (schematic: H2O, Ca, H2O) ── -->
+  <!-- H2O_bot at z≈1.06nm → y=490-(1.06×253)=490-268=222 -->
+  <!-- Ca at z≈1.20nm → y=490-304=186 -->
+  <!-- H2O_top at z≈1.34nm → y=490-339=151 -->
+  <circle cx="240" cy="222" r="11" fill="#5dade2" stroke="#2471a3" stroke-width="1"/>
+  <text x="255" y="226" font-size="11" fill="#1a5276">H₂O  (pn = 3.5)</text>
+
+  <ellipse cx="240" cy="184" rx="14" ry="12" fill="#f0a030" stroke="#b7600a" stroke-width="1.5"/>
+  <text x="258" y="188" font-size="11" fill="#7d5a00">Ca²⁺  (pn = 0.4)</text>
+
+  <circle cx="240" cy="148" r="11" fill="#5dade2" stroke="#2471a3" stroke-width="1"/>
+  <text x="255" y="152" font-size="11" fill="#1a5276">H₂O  (pn = 3.5)</text>
+
+  <!-- =====================================================================
+       LEFT SIDE — dimension arrows
+       ===================================================================== -->
+
+  <!-- d001 double arrow (full span y=90 to y=490) -->
+  <line x1="60" y1="93" x2="60" y2="487" stroke="#333" stroke-width="1.5"
+        marker-start="url(#arr-up)" marker-end="url(#arr)"/>
+  <text x="55" y="296" text-anchor="middle" font-size="12" fill="#333"
+        font-weight="bold" transform="rotate(-90 55 296)">d001   "Cell length c"   [nm]</text>
+
+  <!-- lattice_d double arrow (T-O-T only, y=248 to y=490) -->
+  <line x1="95" y1="251" x2="95" y2="487" stroke="#1a5276" stroke-width="1.5"
+        marker-start="url(#arr-blue-up)" marker-end="url(#arr-blue)"/>
+  <text x="90" y="376" text-anchor="middle" font-size="11" fill="#1a5276"
+        transform="rotate(-90 90 376)">lattice_d</text>
+
+  <!-- interlayer thickness double arrow (y=90 to y=248) -->
+  <line x1="95" y1="93" x2="95" y2="245" stroke="#b7600a" stroke-width="1.5"
+        marker-start="url(#arr-orange-up)" marker-end="url(#arr-orange)"/>
+  <text x="90" y="173" text-anchor="middle" font-size="10" fill="#b7600a"
+        transform="rotate(-90 90 173)">d001 − lattice_d</text>
+
+  <!-- =====================================================================
+       RIGHT SIDE — default_z and Calc. Z annotations for Ca atom
+       ===================================================================== -->
+
+  <!-- Horizontal dashed guide from Ca to right -->
+  <line x1="254" y1="184" x2="548" y2="184" stroke="#b7600a" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- default_z arrow from z=0 up to Ca position -->
+  <line x1="530" y1="487" x2="530" y2="187" stroke="#b7600a" stroke-width="1.5"
+        marker-start="url(#arr-orange-up)" marker-end="url(#arr-orange)"/>
+  <text x="548" y="340" text-anchor="start" font-size="11" fill="#b7600a"
+        transform="rotate(90 548 340)">default_z   "Def. Z"   [nm]</text>
+
+  <!-- Note: when d001 = default_c, Calc. Z = default_z -->
+  <line x1="490" y1="487" x2="490" y2="187" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="6,3"
+        marker-start="url(#arr-orange-up)" marker-end="url(#arr-orange)"/>
+  <text x="508" y="340" text-anchor="start" font-size="11" fill="#27ae60"
+        transform="rotate(90 508 340)">Calc. Z   [nm]  (= default_z when d001 = default_c)</text>
+
+  <!-- z=0 tick on right axis -->
+  <line x1="526" y1="490" x2="534" y2="490" stroke="#b7600a" stroke-width="1.5"/>
+
+  <!-- =====================================================================
+       BOUNDARY REFERENCE LINES
+       ===================================================================== -->
+
+  <!-- z = 0 baseline -->
+  <line x1="138" y1="490" x2="442" y2="490" stroke="#333" stroke-width="2"/>
+
+  <!-- z = lattice_d line -->
+  <line x1="105" y1="248" x2="140" y2="248" stroke="#1a5276" stroke-width="1.5"/>
+  <line x1="438" y1="248" x2="530" y2="248" stroke="#1a5276" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- z = d001 line -->
+  <line x1="138" y1="90" x2="442" y2="90" stroke="#333" stroke-width="2"/>
+
+  <!-- =====================================================================
+       Z-AXIS LABELS (far right)
+       ===================================================================== -->
+  <text x="540" y="494" font-size="11" fill="#333" font-weight="bold">z = 0</text>
+  <text x="540" y="252" font-size="11" fill="#1a5276" font-weight="bold">z = lattice_d</text>
+  <text x="540" y="94"  font-size="11" fill="#333" font-weight="bold">z = d001</text>
+
+  <!-- default_c label near top -->
+  <rect x="540" y="98" width="128" height="28" rx="3" fill="#fffde7" stroke="#f0c040" stroke-width="1"/>
+  <text x="604" y="110" text-anchor="middle" font-size="10" fill="#7d6608">default_c = d001</text>
+  <text x="604" y="122" text-anchor="middle" font-size="10" fill="#7d6608">when no change made</text>
+
+  <!-- =====================================================================
+       BOTTOM — UI LABEL MAPPING TABLE
+       ===================================================================== -->
+  <line x1="40" y1="535" x2="640" y2="535" stroke="#ccc" stroke-width="1"/>
+  <text x="340" y="550" text-anchor="middle" font-size="11" fill="#555">
+    UI labels:  "Cell length c" = d001  ·  "Default length c" = default_c  ·  "Def. Z" column = default_z  ·  "Calc. Z" column = stretched z  ·  "#" column = pn
+  </text>
+
+</svg>

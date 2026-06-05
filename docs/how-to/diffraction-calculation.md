@@ -63,6 +63,33 @@ F_atom(stl) = f(stl) × pn × exp(2π i × z × stl)
 
 where `pn` is the atom count (occupancy) and `z` is the z-coordinate in Å.
 
+### How `pn` is determined — atom relations
+
+`pn` is not always a static number. When a component has **Atom relations** defined, those relations modify `pn` values on the fly before the structure factor is computed.
+
+**Trigger:** Relations are applied reactively via the MVC observer pattern. Whenever any atom or relation property changes (including during refinement, when `value` is updated by L-BFGS-B), `Component._apply_atom_relations()` fires and immediately updates the affected `pn` values.
+
+**AtomRatio** — binary substitution between two atoms at a shared site:
+
+```
+atom1.pn = value × sum
+atom2.pn = (1 − value) × sum
+```
+
+`sum` is fixed (total site occupancy); `value` is the refinable ratio. Example: Fe/Al substitution in the octahedral sheet with `sum = 4.0` and `value = Fe/(Fe+Al)`.
+
+**AtomContents** — one `value` drives the `pn` of one or more atoms independently:
+
+```
+atom[i].pn = amount[i] × value
+```
+
+`amount[i]` is a fixed per-atom multiplier; `value` is the refinable content. Example: K interlayer content with `amount = 1.0` sets `K.pn = value` directly.
+
+**Bridge to the calculation:** After relations apply, each atom's updated `pn` is copied into its `data_object` (the lightweight C-level struct passed to the calculation engine). From there it enters the structure factor formula above as the occupancy weight on the scattering factor.
+
+The practical effect: a single refinable parameter (`value`) can simultaneously control the occupancies of multiple atoms while enforcing a chemical constraint (e.g. total site occupancy stays fixed, or Fe and Al always sum to the same total).
+
 ---
 
 ## Step 2 — Component Structure Factors
