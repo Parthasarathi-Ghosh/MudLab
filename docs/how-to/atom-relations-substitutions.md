@@ -30,6 +30,7 @@ Before adding any Atom Relation:
 1. **Both atoms must already exist** in the layer or interlayer atom list.
 2. Set their initial `pn` values consistently — the relation will overwrite them on first apply, but a sensible starting value avoids confusion.
 3. Place them at the correct crystallographic `z` position. Substituting ions at the same site share the same `z` (or very close to it).
+4. **Define relations separately for the layer and the interlayer.** A single relation must reference atoms from **one** structural context only — all-layer or all-interlayer. Never mix a layer atom and an interlayer atom in the same `AtomRatio`/`AtomContents`: they are different sites with different behaviour (layer atoms have fixed `z`; interlayer atoms have `stretch_z = True` and scale with d001), and their `sum`/occupancy logic is unrelated (layer = site multiplicity; interlayer = derived from layer charge). Model a layer substitution with layer-atom relations and an interlayer exchange with interlayer-atom relations — as two separate relations.
 
 ---
 
