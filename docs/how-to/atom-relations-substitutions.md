@@ -182,6 +182,30 @@ Si.pn     = 0.75 × 4 = 3.0    →  3 Si per tetrahedral sheet per unit cell
 
 ---
 
+#### Important: two tetrahedral sheets in a 2:1 structure
+
+A 2:1 layer (smectite, vermiculite, illite, mica) has **two tetrahedral sheets**, represented in MudLab as **two separate Si atoms** at different z-levels — an upper sheet (e.g. z ≈ 0.60) and a lower sheet (e.g. z ≈ 0.06), each with `pn = 4`. An `AtomRatio` references one specific atom, so **a single Si→Al relation substitutes only one sheet.**
+
+**Substitute both sheets equally.** A 2:1 layer is centrosymmetric — the two tetrahedral sheets are related by symmetry, so in the disordered average structure MudLab models, Al must be distributed **equally over both sheets**. Substituting only one sheet creates an unphysical asymmetry.
+
+**Loewenstein's rule applies per sheet.** Each tetrahedral sheet is its own corner-sharing network; the two sheets are *not* linked tetrahedron-to-tetrahedron (they join through the octahedral sheet via apical oxygens). So the Al/(Al+Si) ≤ 0.5 cap applies **independently to each sheet**. Because both sheets carry the same fraction, the per-sheet cap and the per-layer figure coincide — but the constraint is fundamentally per sheet. (The dialog's Loewenstein warning fires per relation, which is correct *provided each sheet has its own relation*.)
+
+**Recommended setup — one parameter drives both sheets:**
+
+| Relation | Type | Role |
+|---|---|---|
+| `Tet Al fraction` | `AtomContents` (master, refinable) | `value` = the tetrahedral Al fraction; two content rows, each targeting an AtomRatio's `value`, amount = 1 |
+| `Si-Al (upper)` | `AtomRatio` (slave) | `sum = 4`, atom1 = `Al_upper`, atom2 = `Si_upper` |
+| `Si-Al (lower)` | `AtomRatio` (slave) | `sum = 4`, atom1 = `Al_lower`, atom2 = `Si_lower` |
+
+Refining the single master `value` then moves both sheets together, symmetrically. (Two independent `AtomRatio`s kept equal by hand also work, but give the optimizer two parameters for one physical degree of freedom — avoid this.) This is the same master/slave chaining as the Tschermak example below.
+
+**1:1 structures are different — a single tetrahedral sheet.** Kaolinite and serpentine (1:1) have only **one** tetrahedral sheet, so a single `AtomRatio` is sufficient and correct — there is no second sheet to pair. The two-sheet pairing above applies **only to 2:1 structures**.
+
+**Octahedral substitutions** (Examples 2–6) involve a single octahedral sheet, so one relation per substitution is always sufficient — the pairing concern is specific to the two tetrahedral sheets of a 2:1 layer.
+
+---
+
 ### 2 — Octahedral Al → Mg (montmorillonite)
 
 **Science:** Mg²⁺ replaces Al³⁺ in the dioctahedral sheet. This is the primary source of negative layer charge in montmorillonite.
