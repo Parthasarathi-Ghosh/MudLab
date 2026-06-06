@@ -191,6 +191,45 @@ After the optimizer completes and `apply_best_solution()` has been called, the r
 
 ---
 
+## Known issues (to revisit)
+
+### AtomContents: inner "Add" does not show the new row  *(deferred 2026-06-06, V19)*
+
+In the Edit AtomContents dialog, clicking **Add** in the inner atom-contents
+list appears to do nothing — no new row appears.
+
+**Status:** deferred. Two safety checks done before deferring:
+1. **Calc/refinement read the list live.** `Component._apply_atom_relations`
+   → `AtomContents.apply_relation` iterates `self.atom_contents` directly on
+   every `data_changed` and every refinement step — there is no cached
+   snapshot. So the model list is always used as-is; this is purely a UI
+   refresh bug, not a calculation bug.
+2. **Non-empty AtomContents exist throughout the default components**
+   (Illite `K Content`, Di-Smectite `H2O content` ×2 atoms, Chlorite ×7, every
+   smectite/vermiculite/mica). Loading and calculating with populated
+   AtomContents is well-exercised — only the *interactive add-a-row* path is
+   affected, which was apparently never used (contents were always built
+   programmatically or loaded from file).
+
+**Leading hypothesis (unconfirmed):** the inline treeview refreshes via a
+`ListObserver` that only fires for an *observable* list. `AtomContents.__init__`
+initializes the list with `type(self).atom_contents._set(self, [])` — calling
+the low-level `_set` directly (because `atom_contents` is `ReadOnly`, the normal
+setter is blocked). `LabeledProperty._set` stores the value as-is, bypassing
+whatever wrapping normal assignment does, so the list may not be observable and
+`row-inserted` is never emitted. Initial rows show (read once at bind time) but
+runtime appends don't. Contrast with `atom_relations` (normally set, observable)
+where Add works.
+
+**Possible fixes (to evaluate, needs GUI runtime testing):**
+- Make `atom_contents` notify correctly despite being `ReadOnly`, or
+- Force a treeview rebind in `ContentsListController` after add/remove.
+
+Not urgent: AtomContents authoring by hand via this dialog is a rare path; the
+feature works correctly for loaded/programmatic contents.
+
+---
+
 ## Test checklist
 
 After any change to these guardrails, verify:
