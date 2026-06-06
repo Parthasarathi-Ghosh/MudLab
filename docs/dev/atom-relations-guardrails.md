@@ -211,22 +211,43 @@ list appears to do nothing — no new row appears.
    affected, which was apparently never used (contents were always built
    programmatically or loaded from file).
 
-**Leading hypothesis (unconfirmed):** the inline treeview refreshes via a
-`ListObserver` that only fires for an *observable* list. `AtomContents.__init__`
-initializes the list with `type(self).atom_contents._set(self, [])` — calling
-the low-level `_set` directly (because `atom_contents` is `ReadOnly`, the normal
-setter is blocked). `LabeledProperty._set` stores the value as-is, bypassing
-whatever wrapping normal assignment does, so the list may not be observable and
-`row-inserted` is never emitted. Initial rows show (read once at bind time) but
-runtime appends don't. Contrast with `atom_relations` (normally set, observable)
-where Add works.
+**Confirmed root cause** (verified 2026-06-06 by diffing against the upstream
+PyXRD tree at `C:\Users\pxgho\PyXRD`):
 
-**Possible fixes (to evaluate, needs GUI runtime testing):**
-- Make `atom_contents` notify correctly despite being `ReadOnly`, or
-- Force a treeview rebind in `ContentsListController` after add/remove.
+The inline treeview refreshes via a `ListObserver` that only fires when the
+property value is an *observable* wrapper (`ObsWrapperBase`); list mutation
+notifications are gated on `isinstance(value, ObsWrapperBase)` in
+`mvc/models/base.py`. The wrapping happens in `LabeledProperty.__set__` via
+`ValueWrapper.wrap_value` — the low-level `_set` does **not** wrap.
+
+- `Component.atom_relations` is set normally
+  (`self.atom_relations = self.get_list(...)`) → `__set__` → wrapped →
+  observable → Add refreshes the list.  ✓
+- `AtomContents.atom_contents` is `ReadOnly`, so the normal setter only warns.
+  `AtomContents.__init__` therefore writes it with
+  `type(self).atom_contents._set(self, atom_contents)`, bypassing `__set__` and
+  the wrapping → the list stays a **plain `list`**, not observable → appends
+  emit no `row-inserted` → the treeview never shows added rows. Initial rows
+  show because they are read once at bind time.  ✗
+
+**This is a pre-existing UPSTREAM PyXRD bug, not a MudLab regression.** The
+`AtomContents` model, `ContentsListController`, and the entire mvc framework on
+this path are byte-identical to PyXRD apart from python-3.14 port fixes
+(`getargspec`→`getfullargspec`, a couple of `None` guards). PyXRD behaves the
+same.
+
+**Fix candidates (to evaluate, needs GUI runtime testing):**
+1. Wrap before storing in `AtomContents.__init__`:
+   `type(self).atom_contents._set(self, ValueWrapper.wrap_value("atom_contents", atom_contents, self))`
+   — keeps `ReadOnly`, makes the list observable. (Smallest change; verify the
+   wrapped list still serialises and that `set_atom_content_values` etc. work.)
+2. Drop `ReadOnlyMixin` from `atom_contents` and set it via normal assignment so
+   `__set__` wraps it. (Simpler, but changes the property contract — reassignment
+   becomes allowed.)
 
 Not urgent: AtomContents authoring by hand via this dialog is a rare path; the
-feature works correctly for loaded/programmatic contents.
+feature works correctly for loaded/programmatic contents (which is how every
+default component is built).
 
 ---
 
