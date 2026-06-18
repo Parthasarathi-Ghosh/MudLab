@@ -44,3 +44,9 @@ python excel_xrd_to_xy.py "scan data.xls" --raw
 ```
 By default the `.xy` files are written to a `converted_xy` folder next to
 the workbook. Then in MudLab: **Import Specimen → select the `.xy` files**.
+
+**Full step-by-step guide** (setting up Python, installing the packages,
+running on Windows, options, and troubleshooting):
+[docs/how-to/import-excel-xrd.md](../docs/how-to/import-excel-xrd.md).
+
+Run `python excel_xrd_to_xy.py -h` for the built-in option help.
