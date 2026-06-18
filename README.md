@@ -30,6 +30,15 @@ Launch **MudLab** from the Start Menu or Desktop shortcut.
 2. Extract anywhere (a USB drive, a project folder, etc.)
 3. Run `mudlab.exe` inside the extracted folder
 
+### First launch — Windows SmartScreen warning
+
+MudLab's executables are **not yet code-signed**, so the first time you run
+the installer or `mudlab.exe`, Windows may show a blue
+*"Windows protected your PC"* SmartScreen dialog. This is expected for
+unsigned software and does **not** mean the file is unsafe. To continue,
+click **More info**, then **Run anyway**. Your web browser or Microsoft
+Defender may also ask you to confirm the download first.
+
 ---
 
 ## System Requirements
@@ -48,7 +57,8 @@ Launch **MudLab** from the Start Menu or Desktop shortcut.
 ### Project & Specimen Management
 - Organise your work into **projects** containing one or more specimens
 - Import measured XRD patterns from a wide range of formats:
-  `.XRDML` (PANalytical), `.RAW` (Bruker), `.BRML`, `.CPI`, `.RD`, `.UDF`, `.CSV`
+  `.XRDML` (PANalytical), `.RAW` / `.BRML` (Bruker), `.UXD` (Bruker/Siemens),
+  `.CPI` (Sietronics), `.RD`, `.UDF`, `.CSV`, `.ASC`
 - Visualise experimental and calculated patterns side by side on an
   interactive Matplotlib plot
 
@@ -111,12 +121,15 @@ are all shown in a dedicated refinement dialog.
 | Format | Extension | Notes |
 |---|---|---|
 | MudLab project | `.mud` | Native JSON-based format |
+| PANalytical XRDML | `.xrdml` | |
 | Bruker RAW | `.RAW` | v1, v2, v3 |
 | Bruker BRML | `.brml` | ZIP-based XML |
+| Bruker/Siemens UXD | `.uxd` | ASCII |
 | Sietronics CPI | `.cpi` | |
 | Philips RD | `.rd` | |
 | Philips UDF | `.udf` | |
 | CSV | `.csv` | Two-column 2θ / intensity |
+| ASCII XY | `.asc` | Two-column 2θ / intensity (whitespace) |
 
 ---
 
