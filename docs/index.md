@@ -100,6 +100,7 @@ Detailed explanations of MudLab's tools and outputs:
 - [How MudLab calculates a diffraction pattern](how-to/diffraction-calculation.md)
 - [Project file format (.mud)](how-to/project-file-format.md)
 - [Phase and component file formats](how-to/file-formats.md)
+- [Importing XRD data that was pasted into Excel](how-to/import-excel-xrd.md)
 - [How to use Edit Phases](how-to/edit-phases.md)
 - [How to change an interlayer cation](how-to/change-interlayer-cation.md)
 - [How default phases are generated](how-to/default-phases.md)
