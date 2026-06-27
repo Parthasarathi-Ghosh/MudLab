@@ -194,10 +194,12 @@ When a `GtkSpinButton` shares a table row with a taller widget, wrap it in `GtkA
 ### Component list height (object_store.glade)
 `frm_objects_tv`: `vexpand=False`, `expand=False` (packing). Scrolled window: `propagate_natural_height=True`, `max_content_height=300`. Prevents the component name list from stretching when the right panel grows on selection.
 
-### Window type hint
-Omitting `type_hint` gives standard window decoration (minimize/maximize/close) on Windows; setting `type_hint=dialog` removes the minimize and maximize buttons (Close stays, window still drag-resizable).
+### Window decoration / removing min-max buttons
+Omitting `type_hint` gives standard decoration (minimize/maximize/close) on Windows.
 
-**Intentional exception — Edit Phases / Edit Mixtures.** These three views (`EditPhaseView`, `EditMixtureView`, `EditInSituMixtureView`) set the class attribute `window_type_hint = "DIALOG"` (applied in `BaseView.__init__` via `set_type_hint`). Their glade "top" widget is a `GtkTable`/`GtkVBox` (the MVC framework wraps it in a window), so the hint is set programmatically, not in glade. This drops min/max **on purpose**: the dialogs are `transient_for` the main window, so minimizing them used to also minimize the main window. On-top behavior and the live plot updates are unaffected (transient/model signals are independent of `type_hint`). Do not "restore" maximize on these by removing the hint.
+**Edit Phases / Edit Mixtures windows have min/max removed on purpose.** Their *window* is an `ObjectListStoreView` (loads `edit_dialog.glade`, a `GtkWindow`) — `EditPhaseView`/`EditMixtureView` are only the right-panel content, so setting anything on those does nothing to the window. The window is registered in `AppView.child_views` as `NoMinMaxObjectListStoreView` (a thin `ObjectListStoreView` subclass with `hide_min_max = True`), for the `"phases"` and `"mixtures"` keys only (`"atom_types"`/`"behaviours"` stay normal).
+
+`BaseView.hide_min_max=True` runs `_install_min_max_remover(top)`, which combines a `Gdk.WindowTypeHint.DIALOG` hint **and** `gdkwin.set_functions(MOVE|RESIZE|CLOSE)` (the latter (re)applied on realize/map, since it needs the realized `GdkWindow`). `type_hint` alone was unreliable on this GTK build. Reason: the windows are `transient_for` the main window, so minimizing them also minimized the main window. Close + edge-resize, on-top (transient), and live plot updates are all unaffected.
 
 ### Small tool dialogs
 `BackgroundView`, `SmoothDataView`, `AddNoiseView`, `StripPeakView`, `CalculatePeakPropertiesView`, `TrimView` all inherit `edit_dialog.glade`'s 1050×750 default. Each overrides it in `__init__`:
