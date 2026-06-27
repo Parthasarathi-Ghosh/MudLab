@@ -195,7 +195,9 @@ When a `GtkSpinButton` shares a table row with a taller widget, wrap it in `GtkA
 `frm_objects_tv`: `vexpand=False`, `expand=False` (packing). Scrolled window: `propagate_natural_height=True`, `max_content_height=300`. Prevents the component name list from stretching when the right panel grows on selection.
 
 ### Window type hint
-Do **not** set `type_hint=dialog` on main editing windows — it removes maximize/restore buttons on Windows. Omitting `type_hint` gives standard window decoration.
+Omitting `type_hint` gives standard window decoration (minimize/maximize/close) on Windows; setting `type_hint=dialog` removes the minimize and maximize buttons (Close stays, window still drag-resizable).
+
+**Intentional exception — Edit Phases / Edit Mixtures.** These three views (`EditPhaseView`, `EditMixtureView`, `EditInSituMixtureView`) set the class attribute `window_type_hint = "DIALOG"` (applied in `BaseView.__init__` via `set_type_hint`). Their glade "top" widget is a `GtkTable`/`GtkVBox` (the MVC framework wraps it in a window), so the hint is set programmatically, not in glade. This drops min/max **on purpose**: the dialogs are `transient_for` the main window, so minimizing them used to also minimize the main window. On-top behavior and the live plot updates are unaffected (transient/model signals are independent of `type_hint`). Do not "restore" maximize on these by removing the hint.
 
 ### Small tool dialogs
 `BackgroundView`, `SmoothDataView`, `AddNoiseView`, `StripPeakView`, `CalculatePeakPropertiesView`, `TrimView` all inherit `edit_dialog.glade`'s 1050×750 default. Each overrides it in `__init__`:
