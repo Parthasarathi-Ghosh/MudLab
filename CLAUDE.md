@@ -236,7 +236,7 @@ Source: `phases/models/phase.py`, `phases/views.py` (`CifImportDialog`), `phases
 - **importlib.resources** everywhere instead of `pkg_resources.resource_filename`.
   Pattern: `import importlib.resources as _ir; resource_filename = lambda pkg, path: str(_ir.files(pkg).joinpath(path))`
 - **MudLabLine shim:** `mudlab/generic/io/json_codec.py` remaps old `pyxrd.*` type strings on load.
-- **notes/** folder at repo root — Obsidian vault with 11 concept notes (Overview, Architecture, XRD Calculation, Phase/Component Model, Atom Relations, CIF Import, Mixture Model, Refinement, Markers/Peak Detection, GTK UI Conventions, File Formats).
+- **notes/** folder at repo root — 12 Markdown concept notes (Overview, Architecture, XRD Calculation, Phase/Component Model, Atom Relations, CIF Import, Mixture Model, Refinement, Markers/Peak Detection, GTK UI Conventions, File Formats, Oxide Composition). Plain Markdown (readable in any editor/GitHub); the Obsidian `.obsidian/` config was removed and `.obsidian/` is gitignored.
 
 ## Commit Message Format
 Always use `HHMMddmmyyyy` using the current system time (e.g. `011920022026` = 01:19 on Feb 20 2026).
