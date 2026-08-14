@@ -76,19 +76,24 @@ build, and `validate()` never fires so it's latent only). The real crash:
   in the invalid region ~75% of the time (R0G3: 0%), so editing/refining it
   crashes almost always while R0G3 never does.
 
-**Fix applied:**
-1. `calculations/phases.py`, `get_intensity` — guard the LP factor on
-   `phase.valid_probs` (`if phase.apply_lpf and phase.valid_probs:`). An invalid
-   matrix now yields a zero pattern instead of crashing (matches the MudLab2
-   port's behaviour).
-2. `probabilities/models/base_models.py`, `validate()` — the latent sign-typo
-   thresholds `1e4`/`1e6` corrected to `1e-4`/`1e-6` so the sum-to-one /
-   row-stochastic checks actually fire (candidate below).
+**Fix applied — ONE change:**
+`calculations/phases.py`, `get_intensity` — guard the LP factor on
+`phase.valid_probs` (`if phase.apply_lpf and phase.valid_probs:`). An invalid
+matrix now yields a zero pattern instead of crashing (matches the MudLab2
+port's behaviour). Safe for RawPatternPhase (it sets `apply_lpf=False`, so the
+`and` short-circuits before touching `valid_probs`).
 
-**Verified headless** (R1 G3 / R0 G3 test projects): R1G3 — 60 random probability
-changes = 0 crashes (41 correctly blanked by the guard); the auto_run edit
-cascade = 0/30 crashes. R0G3 — unchanged (0 invalid, still calculates). Valid
-baselines still produce non-blank patterns (no false invalidation).
+**Do NOT touch `validate()`'s thresholds.** The second candidate below (change
+`1e4`/`1e6` → `1e-4`/`1e-6`) was tried and **reverted after audit**: it blanks
+legitimately FITTED R2G3/R3G2 projects. Those matrices are in-range ([0,1]) but
+their row sums deviate from 1 by up to ~1.0 in the checked representation, so the
+row-stochastic check is *misapplied* for R≥2 models, not merely mis-thresholded.
+The crash never needed it — R1G3 invalidity is always out-of-[0,1], already
+caught by the live value-in-[0,1] check.
+
+**Verified headless** (all R0-R3 / G2-G3 test projects): 12/12 fitted projects
+render non-blank (no false invalidation); R1G3/R2G3/R3G2 = 0 crashes over 50
+out-of-range edits each (auto_run cascade included); R0 / R1G2 unaffected.
 
 ### Original investigation notes (candidates — kept for reference)
 

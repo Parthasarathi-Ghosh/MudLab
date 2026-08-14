@@ -61,17 +61,17 @@ Reading this:
 
 ## Upstream fix (MudLab — applied & committed)
 
-1. `calculations/phases.py`, `get_intensity`: guard the LP factor on validity —
-   `if phase.apply_lpf and phase.valid_probs:` — so an invalid matrix yields a
-   zero pattern instead of dereferencing the nulled `sigma_star`.
-2. `probabilities/models/base_models.py`, `validate()`: fixed a latent Py2→3
-   sign-typo — the sum-to-one / row-stochastic thresholds were `1e4` / `1e6`
-   (never fired; only the value-in-[0,1] checks were live) → corrected to
-   `1e-4` / `1e-6`.
+**One change:** `calculations/phases.py`, `get_intensity` — guard the LP factor
+on validity: `if phase.apply_lpf and phase.valid_probs:` — so an invalid matrix
+yields a zero pattern instead of dereferencing the nulled `sigma_star`. Safe for
+RawPatternPhase (it sets `apply_lpf=False`, so `and` short-circuits before
+touching `valid_probs`).
 
-Verified headless (R1 G3 / R2 G2 / R2 G3 / R3 G2 test projects): 0 crashes over
-random probability edits; invalid sets correctly blank; valid baselines
-unchanged; R0 / R1G2 unaffected.
+**The `validate()` `1e4`/`1e6` threshold typo was NOT changed — see warning below.**
+
+Verified headless (all R0-R3 / G2-G3 test projects): 12/12 fitted projects render
+non-blank (no false invalidation); R1G3/R2G3/R3G2 = 0 crashes over 50
+out-of-range edits each (auto_run cascade included); R0 / R1G2 unaffected.
 
 ## For MudLab2 — please verify
 
@@ -79,9 +79,13 @@ unchanged; R0 / R1G2 unaffected.
    *before* any use of `sigma_star` / `CSDS` / `W` / `P` (whatever your
    `Phase.data_object` equivalent nulls). Test **R2G3 and R3G2** specifically —
    they are invalid on essentially every edit, so they exercise the guard hardest.
-2. **validate() thresholds:** if you ported `validate()`, make sure it is not the
-   same `1e4` / `1e6` typo (should be `1e-4` / `1e-6`); otherwise validity
-   detection silently passes non-row-stochastic matrices.
+2. **validate() thresholds — do NOT "fix" `1e4`/`1e6` → `1e-4`/`1e-6`.** We tried
+   that upstream and reverted it: it blanks legitimately-fitted R2G3/R3G2
+   projects, whose matrices are in-range but have row sums deviating from 1 by up
+   to ~1.0 in the checked representation. The row-stochastic check is *misapplied*
+   for R≥2 models (a deeper issue than the threshold), so leave the sum-checks
+   effectively disabled unless you first confirm the check inspects the right,
+   actually-row-stochastic matrices for every R/G.
 3. **Optional UX:** because R1G4 / R2G3 / R3G2 are almost entirely invalid, a
    blanked pattern on nearly every edit is confusing. Consider an explicit
    "invalid probability model" indicator (and/or constrained editable ranges)
