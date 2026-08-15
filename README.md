@@ -1,5 +1,7 @@
 # MudLab
 
+> ℹ️ **This is the final GTK-based release of MudLab.** Development now continues in the Qt-based successor, **[MudLab2](https://github.com/Parthasarathi-Ghosh/MudLab2)**. This repository remains available for the GTK version but will no longer receive new features.
+
 **X-ray Diffraction Analysis for Disordered Layered Minerals**
 
 MudLab is a Windows desktop application for modelling and fitting
